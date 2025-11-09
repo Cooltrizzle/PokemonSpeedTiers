@@ -1,0 +1,2 @@
+# PokemonSpeedTiers
+VGC Speed Tiers
