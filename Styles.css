@@ -36,8 +36,8 @@ body {
 /* keep center block centered regardless of logo width */
 .brand {
   display: flex;
-  /*flex: 1 1 auto;*/
-  flex-direction: column;
+  flex: 1 1 auto;
+  flex-direction:column;
   justify-content: center;
   align-items: center;
   text-align: center;
