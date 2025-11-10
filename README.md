@@ -1,7 +1,5 @@
-<!-- LAST_UPDATED:START --> 
-
-<!-- LAST_UPDATED:END -->
-
+!-- LAST_UPDATED:START --
+!-- LAST_UPDATED:END --
 
 theme: jekyll-theme-minimal
 
