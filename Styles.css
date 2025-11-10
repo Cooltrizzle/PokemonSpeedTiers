@@ -31,12 +31,12 @@ body {
   
   /*background: var(--header-bg, #fff);*/
   /*border-bottom: 1px solid rgba(0,0,0,0.08);*/
-}
+} 
 
 /* keep center block centered regardless of logo width */
 .brand {
   display: flex;
-  flex: 1 1 auto;
+  /*flex: 1 1 auto;*/
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -49,7 +49,7 @@ body {
   /*font-size: 1.125rem;*/
   font-size: 2rem;
   font-weight: 600;
-  /*white-space: wrap;*/
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
