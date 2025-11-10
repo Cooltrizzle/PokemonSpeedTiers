@@ -15,7 +15,7 @@ body {
   justify-content: space-between;
   gap: 1rem;
   padding: 0.5rem 1rem;
-  background: var(--header-bg, #fff);
+  /*background: var(--header-bg, #fff);*/
   border-bottom: 1px solid rgba(0,0,0,0.08);
 }
 
