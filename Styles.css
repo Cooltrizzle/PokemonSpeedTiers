@@ -21,7 +21,7 @@ body {
 }
 
 /* keep center block centered regardless of logo width */
-.Title {
+.brand {
   flex: 1 1 auto;
   display: flex;
   justify-content: center;
