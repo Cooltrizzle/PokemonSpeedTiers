@@ -28,6 +28,7 @@ body {
   padding: 0.5rem 1rem;
   flex-wrap: nowrap;
   margin: 0 auto;
+  text-align: center;
   /*background: var(--header-bg, #fff);*/
   /*border-bottom: 1px solid rgba(0,0,0,0.08);*/
 }
@@ -46,7 +47,7 @@ body {
   /*font-size: 1.125rem;*/
   font-size: 2rem;
   font-weight: 600;
-  white-space: nowrap;
+  white-space: wrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
