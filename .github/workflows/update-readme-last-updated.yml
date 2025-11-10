@@ -22,6 +22,16 @@ jobs:
           # ISO date + time (UTC)
           echo "TIMESTAMP=$(date -u +'%Y-%m-%d %H:%M UTC')" >> $GITHUB_ENV
 
+      - name: Debug README and environment
+        run: |
+          echo "Runner shell: $SHELL"
+          echo "awk version:"
+          awk --version || awk -W version || true
+          echo "--- head (show ^M if present) ---"
+          sed -n '1,40p' README.md | sed -n '1,40p' | nl -ba
+          echo "--- show bytes of first 3 lines ---"
+          head -n 3 README.md | od -c
+
       - name: Replace placeholder in README
         run: |
           FILE=README.md
