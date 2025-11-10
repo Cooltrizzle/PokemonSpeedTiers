@@ -47,5 +47,22 @@
     // small runtime nicety: show current year
     document.getElementById('year').textContent = new Date().getFullYear();
   </script>
+
+<small>Last commit: <span id="last-commit">loading…</span></small>
+
+<script>
+fetch('last-commit.txt')
+  .then(r => r.text())
+  .then(t => {
+    if (!t) throw new Error('empty');
+    const d = new Date(t.trim());
+    document.getElementById('last-commit').textContent = d.toLocaleString();
+  })
+  .catch(() => { document.getElementById('last-commit').textContent = 'unknown'; });
+</script>
+
+
+
+  
 </body>
 </html>
