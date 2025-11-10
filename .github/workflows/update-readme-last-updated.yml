@@ -23,7 +23,7 @@ jobs:
         run: |
           echo "TIMESTAMP=$(date -u +'%Y-%m-%d %H:%M UTC')" >> $GITHUB_ENV
 
-      - name: Replace placeholder in README (robust)
+      - name: Replace placeholder in README (python)
         run: |
           set -eo pipefail
           FILE="README.md"
@@ -44,14 +44,25 @@ EOF
           echo "Before replacement (first 20 lines):"
           head -n 20 "$FILE" || true
 
-          # Use perl in slurp mode to safely replace block between markers
-          perl -0777 -pe '
-            my $s = quotemeta($ENV{"START"});
-            my $e = quotemeta($ENV{"END"});
-            my $n = $ENV{"NEWLINE"};
-            s/($s).*?($e)/$1\n$n\n$2/sg;
-          ' -- "$FILE" > "$FILE.tmp"
-          mv "$FILE.tmp" "$FILE"
+          python3 - <<PY
+import io,sys
+fn = "README.md"
+start = "<!-- LAST_UPDATED:START -->"
+end = "<!-- LAST_UPDATED:END -->"
+new = "Last updated: ${TIMESTAMP}"
+with io.open(fn, "r", encoding="utf-8") as f:
+    s = f.read()
+if start in s and end in s:
+    prefix, rest = s.split(start,1)
+    between, suffix = rest.split(end,1)
+    s2 = prefix + start + "\n" + new + "\n" + end + suffix
+else:
+    # if markers missing, append them at end
+    s2 = s.rstrip() + "\n\n" + start + "\n" + new + "\n" + end + "\n"
+with io.open(fn, "w", encoding="utf-8") as f:
+    f.write(s2)
+print("Replacement done")
+PY
 
           echo "After replacement (first 20 lines):"
           head -n 20 "$FILE" || true
