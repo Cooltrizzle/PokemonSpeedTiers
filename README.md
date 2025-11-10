@@ -1,10 +1,3 @@
-# Project Title
-
-Short one-line summary.
-
-<!-- LAST_UPDATED:START -->
-<!-- LAST_UPDATED:END -->
-
 <details>
 <summary>Notes for maintainers</summary>
 
