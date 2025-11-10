@@ -20,8 +20,7 @@ jobs:
           persist-credentials: true
 
       - name: Set timestamp (UTC)
-        run: |
-          echo "TIMESTAMP=$(date -u +'%Y-%m-%d %H:%M UTC')" >> $GITHUB_ENV
+        run: echo "TIMESTAMP=$(date -u +'%Y-%m-%d %H:%M UTC')" >> $GITHUB_ENV
 
       - name: Replace placeholder in README (python)
         run: |
@@ -45,20 +44,20 @@ EOF
           head -n 20 "$FILE" || true
 
           python3 - <<PY
-import io,sys
+import io, os, sys
 fn = "README.md"
 start = "<!-- LAST_UPDATED:START -->"
 end = "<!-- LAST_UPDATED:END -->"
-new = "Last updated: ${TIMESTAMP}"
+new = os.environ.get("TIMESTAMP", "")
+new_line = f"Last updated: {new}"
 with io.open(fn, "r", encoding="utf-8") as f:
     s = f.read()
 if start in s and end in s:
     prefix, rest = s.split(start,1)
     between, suffix = rest.split(end,1)
-    s2 = prefix + start + "\n" + new + "\n" + end + suffix
+    s2 = prefix + start + "\n" + new_line + "\n" + end + suffix
 else:
-    # if markers missing, append them at end
-    s2 = s.rstrip() + "\n\n" + start + "\n" + new + "\n" + end + "\n"
+    s2 = s.rstrip() + "\n\n" + start + "\n" + new_line + "\n" + end + "\n"
 with io.open(fn, "w", encoding="utf-8") as f:
     f.write(s2)
 print("Replacement done")
