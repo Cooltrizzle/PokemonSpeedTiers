@@ -1,6 +1,6 @@
 /* styles.css */
 body {
-  background-color: #DFF3E8;
+  background-color: #EAF6EF;
   color: #0b1220;
   font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
   margin: 0;
@@ -72,7 +72,11 @@ body {
 .nav a { color: inherit; text-decoration: none; padding: 0.25rem 0.5rem; }
 .nav a:focus, .nav a:hover { text-decoration: underline; outline: none; }
 
-.card { margin-bottom: 5rem; }
+.cards {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem; /* vertical spacing between cards */
+}
 
 /* optional: make header compact on small screens */
 @media (max-width: 520px) {
