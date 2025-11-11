@@ -1,7 +1,6 @@
 /* styles.css */
 body {
-  /*background-color: #D9EAD3;*/
-  background: linear-gradient(180deg, #E6F9EA 0%, #F0FAF2 100%);
+  background-color: #E6F9EA;
   color: #0b1220;
   font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
   margin: 0;
@@ -72,6 +71,8 @@ body {
 }
 .nav a { color: inherit; text-decoration: none; padding: 0.25rem 0.5rem; }
 .nav a:focus, .nav a:hover { text-decoration: underline; outline: none; }
+
+.card { margin-bottom: 1rem; }
 
 /* optional: make header compact on small screens */
 @media (max-width: 520px) {
