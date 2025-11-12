@@ -104,5 +104,5 @@ body {
   body {
     background: var(--page-bg);
   }
-  .container { margin: 0 1rem; max-width: 100%; }
+  .container { margin: 0 1rem; max-width: 100%; padding: 28px}
 }
