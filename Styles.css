@@ -81,19 +81,6 @@ body {
   object-fit: contain;
 }
 
-/* button with icon */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.35rem 0.6rem;
-  text-decoration: none;
-  color: inherit;
-  border-radius: 6px;
-  background: transparent;
-  font-weight: 600;
-}
-
 /* icon sizing — small and crisp (use 16x16 or 24x24 images) */
 .btn-icon {
   width: 16px;
