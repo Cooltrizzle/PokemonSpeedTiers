@@ -98,13 +98,6 @@ body {
   object-fit: contain;
   flex: 0 0 auto;
 }
-/* underline only the text label, not the icon */
-.btn-label {
-  text-decoration: underline;
-  text-underline-offset: 2px;        /* move underline a bit away from text */
-  text-decoration-thickness: 2px;    /* optional: control thickness */
-  text-decoration-color: currentColor;
-}
 
 .nav {
   display: flex;
