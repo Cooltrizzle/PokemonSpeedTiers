@@ -81,6 +81,15 @@ body {
   object-fit: contain;
 }
 
+
+/* ensure anchor layout and spacing */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;               /* space between icon and label */
+  text-decoration: none;     /* remove underline from the whole anchor */
+  color: inherit;
+}
 /* icon sizing — small and crisp (use 16x16 or 24x24 images) */
 .btn-icon {
   width: 16px;
@@ -88,6 +97,13 @@ body {
   display: inline-block;
   object-fit: contain;
   flex: 0 0 auto;
+}
+/* underline only the text label, not the icon */
+.btn-label {
+  text-decoration: underline;
+  text-underline-offset: 2px;        /* move underline a bit away from text */
+  text-decoration-thickness: 2px;    /* optional: control thickness */
+  text-decoration-color: currentColor;
 }
 
 .nav {
