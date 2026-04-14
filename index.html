@@ -52,24 +52,31 @@
 
 <script>
 Promise.all([
+  // Load both CSV files in parallel
   fetch("VGChampions - Regulation.csv").then(r => r.text()),
   fetch("VGChampions - SpeedTiersM-A.csv").then(r => r.text())
 ])
 .then(([regText, speedText]) => {
 
-  // --- Parse Regulation CSV ---
+  /* ---------------------------------------------------------
+     PARSE REGULATION CSV
+     Builds a lookup table:
+       lookup[name][form] = number
+     Example:
+       lookup["alakazam"]["mega"] = "0065"
+       lookup["kommo-o"][""] = "0783"
+  --------------------------------------------------------- */
   const regRows = regText.trim().split(/\r?\n/).map(r => r.split(","));
-  const lookup = {}; 
-  // lookup[name][form] = number
+  const lookup = {};
 
   regRows.forEach((row, i) => {
-    if (i === 0) return; // skip header
+    if (i === 0) return; // Skip header row
 
     const number = row[0].replace("#", ""); // "#001" → "001"
-    const name = row[1].trim().toLowerCase(); // "Alakazam"
-    let form = (row[2] || "").trim().toLowerCase(); // "Mega" or "-"
+    const name = row[1].trim().toLowerCase(); // Pokémon name
+    let form = (row[2] || "").trim().toLowerCase(); // Form or "-"
 
-    // Ignore "-" forms
+    // Treat "-" or empty as no form
     if (form === "-" || form === "") {
       form = "";
     }
@@ -78,14 +85,17 @@ Promise.all([
     lookup[name][form] = number;
   });
 
-  // --- Parse SpeedTiers CSV ---
+  /* ---------------------------------------------------------
+     PARSE SPEEDTIERS CSV
+     Builds the HTML table row by row
+  --------------------------------------------------------- */
   const speedRows = speedText.trim().split(/\r?\n/).map(r => r.split(","));
   const table = document.getElementById("csv-table");
 
   speedRows.forEach((row, i) => {
     const tr = document.createElement("tr");
 
-    // Header rows (row 0 and row 1)
+    // First two rows are headers
     if (i < 2) {
       row.forEach(cell => {
         const th = document.createElement("th");
@@ -96,22 +106,43 @@ Promise.all([
       return;
     }
 
-    // --- Data rows ---
+    /* ---------------------------------------------------------
+       DATA ROWS
+    --------------------------------------------------------- */
     row.forEach((cell, colIndex) => {
       const td = document.createElement("td");
 
+      /* ---------------------------------------------------------
+         IMAGE COLUMN (Column 2)
+         Handles:
+           - Base forms
+           - Formed Pokémon (hyphen)
+           - Multi-word forms (Mega X → Mega_X)
+           - Special exception: Kommo-o family
+      --------------------------------------------------------- */
       if (colIndex === 1) {
-        // Column 2 = IMAGE COLUMN
 
-        let raw = row[0].trim(); // e.g. "Alakazam-Mega"
+        let raw = row[0].trim(); // e.g. "Alakazam-Mega", "Kommo-o"
         let baseName = raw;
         let formName = "";
 
-        // ⭐ NEW RULE: Hyphen means form
-        if (raw.includes("-")) {
-          const parts = raw.split("-");
-          baseName = parts[0];
-          formName = parts[1];
+        // ⭐ RULE 1: Kommo-o family → NOT a form
+        if (raw.toLowerCase().endsWith("-o")) {
+          baseName = raw;   // Keep full name
+          formName = "";    // No form
+        }
+
+        // ⭐ RULE 2: If hyphen exists, split on FIRST hyphen only
+        else if (raw.includes("-")) {
+          const idx = raw.indexOf("-");
+          baseName = raw.substring(0, idx);
+          formName = raw.substring(idx + 1); // Everything after hyphen
+        }
+
+        // ⭐ RULE 3: Convert multi-word forms to underscore
+        // Example: "Mega X" → "Mega_X"
+        if (formName.includes(" ")) {
+          formName = formName.replace(/ /g, "_");
         }
 
         const nameKey = baseName.toLowerCase();
@@ -123,15 +154,16 @@ Promise.all([
         if (lookup[nameKey] && lookup[nameKey][formKey]) {
           number = lookup[nameKey][formKey];
         }
-        // Try base form only (ONLY if no form in SpeedTiers)
+        // Try base form only (only if no form in SpeedTiers)
         else if (!formKey && lookup[nameKey] && lookup[nameKey][""]) {
           number = lookup[nameKey][""];
         }
 
+        // If number found → build image
         if (number) {
           const img = document.createElement("img");
 
-          // ⭐ FORM HANDLING ON FILENAME
+          // ⭐ FORM HANDLING IN FILENAME
           if (formKey) {
             img.src = `Images/Menu_CP_${number}-${formName}.png`;
           } else {
@@ -143,10 +175,11 @@ Promise.all([
           img.style.objectFit = "contain";
           td.appendChild(img);
         } else {
-          td.textContent = ""; // no match found
+          td.textContent = ""; // No match found
         }
 
       } else {
+        // Normal text cell
         td.textContent = cell;
       }
 
@@ -157,6 +190,8 @@ Promise.all([
   });
 });
 </script>
+
+
 
 
 
