@@ -1,166 +1,219 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <link rel="stylesheet" href="style.css">
-</head>
+  <meta charset="UTF-8">
+  <title>Speed Tiers Viewer</title>
 
+  <!-- ============================================================
+       0. LOAD STYLESHEET
+  ============================================================ -->
+  <link rel="stylesheet" href="style.css">
+
+</head>
 <body>
 
-<div class="table-wrapper">
-  <table id="csv-table"></table>
-</div>
+  <!-- ============================================================
+       1. TABLE WRAPPER (Scroll Window)
+  ============================================================ -->
+  <div class="table-wrapper">
+    <table id="csv-table"></table>
+  </div>
 
-<script>
-Promise.all([
-  fetch("VGChampions - Regulation.csv").then(r => r.text()),
-  fetch("VGChampions - SpeedTiersM-A.csv").then(r => r.text())
-])
-.then(([regText, speedText]) => {
 
-  /* ---------------------------------------------------------
-     PARSE REGULATION CSV → lookup[name][form] = number
-  --------------------------------------------------------- */
-  const regRows = regText.trim().split(/\r?\n/).map(r => r.split(","));
-  const lookup = {};
+  <!-- ============================================================
+       2. MAIN SCRIPT — LOAD + BUILD TABLE
+  ============================================================ -->
+  <script>
+  /* ============================================================
+     2.1 LOAD BOTH CSV FILES
+  ============================================================ */
+  Promise.all([
+    fetch("VGChampions - Regulation.csv").then(r => r.text()),
+    fetch("VGChampions - SpeedTiersM-A.csv").then(r => r.text())
+  ])
+  .then(([regText, speedText]) => {
 
-  regRows.forEach((row, i) => {
-    if (i === 0) return;
 
-    const number = row[0].replace("#", "");
-    const name = row[1].trim().toLowerCase();
-    let form = (row[2] || "").trim().toLowerCase();
+    /* ============================================================
+       2.2 PARSE REGULATION CSV → BUILD LOOKUP TABLE
+    ============================================================ */
+    const regRows = regText.trim().split(/\r?\n/).map(r => r.split(","));
+    const lookup = {};
 
-    if (form === "-" || form === "") form = "";
+    regRows.forEach((row, i) => {
+      if (i === 0) return;
 
-    if (!lookup[name]) lookup[name] = {};
-    lookup[name][form] = number;
-  });
+      const number = row[0].replace("#", "");
+      const name = row[1].trim().toLowerCase();
+      let form = (row[2] || "").trim().toLowerCase();
 
-  /* ---------------------------------------------------------
-     PARSE SPEEDTIERS CSV → build table
-  --------------------------------------------------------- */
-  const speedRows = speedText.trim().split(/\r?\n/).map(r => r.split(","));
-  const table = document.getElementById("csv-table");
+      if (form === "-" || form === "") form = "";
 
-  let thead = null;
-  let tbody = null;
-
-  speedRows.forEach((row, i) => {
-    const tr = document.createElement("tr");
-
-    /* ---------------------------------------------------------
-       CREATE THEAD FOR FIRST TWO HEADER ROWS
-    --------------------------------------------------------- */
-    if (i === 0) {
-      thead = document.createElement("thead");
-      table.appendChild(thead);
-    }
-
-    if (i < 2) {
-      row.forEach(cell => {
-        const th = document.createElement("th");
-        th.textContent = cell;
-        tr.appendChild(th);
-      });
-      thead.appendChild(tr);
-      return;
-    }
-
-    /* ---------------------------------------------------------
-       CREATE TBODY BEFORE FIRST DATA ROW
-    --------------------------------------------------------- */
-    if (i === 2) {
-      tbody = document.createElement("tbody");
-      table.appendChild(tbody);
-    }
-
-    /* ---------------------------------------------------------
-       DATA ROWS
-    --------------------------------------------------------- */
-    row.forEach((cell, colIndex) => {
-      const td = document.createElement("td");
-
-      if (colIndex === 1) {
-
-        /* ---------------------------------------------------------
-           IMAGE COLUMN — parse name + form
-        --------------------------------------------------------- */
-
-        let raw = row[0].trim();
-        let baseName = raw;
-        let formName = "";
-
-        // ⭐ RULE 1: Kommo-o family → NOT a form
-        if (raw.toLowerCase().endsWith("-o")) {
-          baseName = raw;
-          formName = "";
-        }
-
-        // ⭐ RULE 2: Split on FIRST hyphen only
-        else if (raw.includes("-")) {
-          const idx = raw.indexOf("-");
-          baseName = raw.substring(0, idx);
-          formName = raw.substring(idx + 1); // EXACT form for lookup
-        }
-
-        // ⭐ lookupForm = EXACT form (with hyphens/spaces)
-        const lookupForm = formName.toLowerCase();
-
-        // ⭐ filename form = underscores instead of hyphens/spaces
-        let fileFormName = formName;
-        fileFormName = fileFormName.replace(/-/g, "_");
-        fileFormName = fileFormName.replace(/ /g, "_");
-
-        const nameKey = baseName.toLowerCase();
-        const formKey = lookupForm;
-
-        let number = null;
-
-        // Try form match
-        if (lookup[nameKey] && lookup[nameKey][formKey]) {
-          number = lookup[nameKey][formKey];
-        }
-        // Try base form
-        else if (!formKey && lookup[nameKey] && lookup[nameKey][""]) {
-          number = lookup[nameKey][""];
-        }
-
-        // ⭐ Build image if number found
-        if (number) {
-          const img = document.createElement("img");
-
-          if (formKey) {
-            img.src = `Images/Menu_CP_${number}-${fileFormName}.png`;
-          } else {
-            img.src = `Images/Menu_CP_${number}.png`;
-          }
-
-          img.style.width = "40px";
-          img.style.height = "40px";
-          img.style.objectFit = "contain";
-          td.appendChild(img);
-        } else {
-          td.textContent = ""; // no match
-        }
-
-      } else {
-        td.textContent = cell;
-      }
-
-      tr.appendChild(td);
+      if (!lookup[name]) lookup[name] = {};
+      lookup[name][form] = number;
     });
 
-    /* ---------------------------------------------------------
-       APPEND DATA ROW TO TBODY
-    --------------------------------------------------------- */
-    tbody.appendChild(tr);
-  });
-});
-</script>
 
+    /* ============================================================
+       2.3 PARSE SPEEDTIERS CSV → BUILD TABLE STRUCTURE
+    ============================================================ */
+    const speedRows = speedText.trim().split(/\r?\n/).map(r => r.split(","));
+    const table = document.getElementById("csv-table");
+
+    let thead = null;
+    let tbody = null;
+
+    speedRows.forEach((row, i) => {
+      const tr = document.createElement("tr");
+
+
+      /* ---------------------------------------------------------
+         2.3A CREATE <thead> AND MERGED HEADER ROW 1
+      --------------------------------------------------------- */
+      if (i === 0) {
+        thead = document.createElement("thead");
+        table.appendChild(thead);
+
+        // Merge Col1–3
+        const th1 = document.createElement("th");
+        th1.colSpan = 3;
+        th1.textContent = row[0];
+        tr.appendChild(th1);
+
+        // Col4
+        const th4 = document.createElement("th");
+        th4.textContent = row[3];
+        tr.appendChild(th4);
+
+        // Col5
+        const th5 = document.createElement("th");
+        th5.textContent = row[4];
+        tr.appendChild(th5);
+
+        // Merge Col6–7
+        const th6 = document.createElement("th");
+        th6.colSpan = 2;
+        th6.textContent = row[5];
+        tr.appendChild(th6);
+
+        // Merge Col8–9
+        const th8 = document.createElement("th");
+        th8.colSpan = 2;
+        th8.textContent = row[7];
+        tr.appendChild(th8);
+
+        // Merge Col10–11
+        const th10 = document.createElement("th");
+        th10.colSpan = 2;
+        th10.textContent = row[9];
+        tr.appendChild(th10);
+
+        thead.appendChild(tr);
+        return;
+      }
+
+
+      /* ---------------------------------------------------------
+         2.3B HEADER ROW 2 (NO MERGES)
+      --------------------------------------------------------- */
+      if (i === 1) {
+        row.forEach((cell, colIndex) => {
+          const th = document.createElement("th");
+          th.textContent = cell;
+          th.classList.add(`col-${colIndex + 1}`);
+          tr.appendChild(th);
+        });
+        thead.appendChild(tr);
+        return;
+      }
+
+
+      /* ---------------------------------------------------------
+         2.3C CREATE <tbody> BEFORE FIRST DATA ROW
+      --------------------------------------------------------- */
+      if (i === 2) {
+        tbody = document.createElement("tbody");
+        table.appendChild(tbody);
+      }
+
+
+      /* ============================================================
+         2.4 BUILD DATA ROWS
+      ============================================================ */
+      row.forEach((cell, colIndex) => {
+        const td = document.createElement("td");
+        td.classList.add(`col-${colIndex + 1}`);
+
+
+        /* ---------------------------------------------------------
+           2.4A IMAGE COLUMN (COLUMN 2)
+        --------------------------------------------------------- */
+        if (colIndex === 1) {
+
+          let raw = row[0].trim();
+          let baseName = raw;
+          let formName = "";
+
+          // Kommo-o exception
+          if (raw.toLowerCase().endsWith("-o")) {
+            baseName = raw;
+            formName = "";
+          }
+          else if (raw.includes("-")) {
+            const idx = raw.indexOf("-");
+            baseName = raw.substring(0, idx);
+            formName = raw.substring(idx + 1);
+          }
+
+          const lookupForm = formName.toLowerCase();
+          let fileFormName = formName.replace(/-/g, "_").replace(/ /g, "_");
+
+          const nameKey = baseName.toLowerCase();
+          const formKey = lookupForm;
+
+          let number = null;
+
+          if (lookup[nameKey] && lookup[nameKey][formKey]) {
+            number = lookup[nameKey][formKey];
+          } else if (!formKey && lookup[nameKey] && lookup[nameKey][""]) {
+            number = lookup[nameKey][""];
+          }
+
+          if (number) {
+            const img = document.createElement("img");
+            img.src = formKey
+              ? `Images/Menu_CP_${number}-${fileFormName}.png`
+              : `Images/Menu_CP_${number}.png`;
+
+            img.style.width = "40px";
+            img.style.height = "40px";
+            img.style.objectFit = "contain";
+            td.appendChild(img);
+          } else {
+            td.textContent = "";
+          }
+
+        } else {
+          td.textContent = cell;
+        }
+
+        tr.appendChild(td);
+      });
+
+
+      /* ============================================================
+         2.5 APPEND DATA ROW TO <tbody>
+      ============================================================ */
+      tbody.appendChild(tr);
+
+    }); // end forEach row
+
+  }); // end Promise.then
+  </script>
 
 </body>
 </html>
+
 
 </body>
 </html>
