@@ -1,0 +1,74 @@
+/* ===============================
+   TABLE WRAPPER (scroll container)
+================================== */
+.table-wrapper {
+  max-height: 600px;
+  overflow-y: auto;
+  overflow-x: auto;
+  position: relative;
+}
+
+/* ===============================
+   BASE TABLE STYLING
+================================== */
+#csv-table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+/* ===============================
+   STICKY HEADER ROWS (TOP 2)
+================================== */
+#csv-table th {
+  position: sticky;
+  top: 0;
+  background: white;
+  z-index: 50; /* Above sticky columns */
+  height: 40px;
+}
+
+/* Second header row */
+#csv-table tr:nth-child(2) th {
+  top: 40px; /* height of first header row */
+  background: white;
+  z-index: 49;
+}
+
+/* ===============================
+   STICKY FIRST 3 COLUMNS
+================================== */
+#csv-table td:nth-child(1),
+#csv-table th:nth-child(1) {
+  position: sticky;
+  left: 0;
+  background: white;
+  z-index: 40;
+}
+
+#csv-table td:nth-child(2),
+#csv-table th:nth-child(2) {
+  position: sticky;
+  left: 120px; /* width of column 1 */
+  background: white;
+  z-index: 39;
+}
+
+#csv-table td:nth-child(3),
+#csv-table th:nth-child(3) {
+  position: sticky;
+  left: 240px; /* width of columns 1 + 2 */
+  background: white;
+  z-index: 38;
+}
+
+/* ===============================
+   OPTIONAL COLUMN WIDTHS
+================================== */
+#csv-table th:nth-child(1),
+#csv-table td:nth-child(1) { width: 120px; }
+
+#csv-table th:nth-child(2),
+#csv-table td:nth-child(2) { width: 120px; }
+
+#csv-table th:nth-child(3),
+#csv-table td:nth-child(3) { width: 120px; }
