@@ -1,37 +1,99 @@
 <!DOCTYPE html>
 <html>
+<head>
+  <meta charset="UTF-8">
+  <title>Speed Tiers</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+
+    .table-wrapper {
+      width: 100%;
+      overflow-x: auto;
+      border: 1px solid #ccc;
+    }
+
+    table {
+      border-collapse: collapse;
+      background: white;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 6px 10px;
+      white-space: nowrap;
+      background: white;
+    }
+
+    th {
+      background: #333;
+      color: white;
+      position: sticky;
+      top: 0;
+      z-index: 5;
+    }
+
+    /* Zebra striping */
+    tr:nth-child(even) td {
+      background: #f2f2f2;
+    }
+
+    /* Freeze first 3 columns */
+    td:nth-child(1), th:nth-child(1) {
+      position: sticky;
+      left: 0;
+      z-index: 4;
+      background: inherit;
+    }
+
+    td:nth-child(2), th:nth-child(2) {
+      position: sticky;
+      left: 120px; /* adjust if needed */
+      z-index: 4;
+      background: inherit;
+    }
+
+    td:nth-child(3), th:nth-child(3) {
+      position: sticky;
+      left: 240px; /* adjust if needed */
+      z-index: 4;
+      background: inherit;
+    }
+  </style>
+</head>
+
 <body>
 
-<h1>CSV Loader Test</h1>
-<pre id="output">Loading…</pre>
+<h1>VGChampions Speed Tiers</h1>
+
+<div class="table-wrapper">
+  <table id="csv-table"></table>
+</div>
 
 <script>
   fetch("VGChampions - SpeedTiersM-A.csv")
     .then(r => r.text())
     .then(text => {
       const rows = text.trim().split(/\r?\n/).map(r => r.split(","));
-      const table = document.createElement("table");
+      const table = document.getElementById("csv-table");
 
       rows.forEach((row, i) => {
         const tr = document.createElement("tr");
 
         row.forEach(cell => {
-          const element = i === 0 ? "th" : "td";
-          const td = document.createElement(element);
+          const el = i === 0 ? "th" : "td";
+          const td = document.createElement(el);
           td.textContent = cell;
           tr.appendChild(td);
         });
 
         table.appendChild(tr);
       });
-
-      document.body.appendChild(table);
-    })
-    .catch(err => {
-      document.body.innerHTML = "Error loading CSV: " + err;
     });
 </script>
-
 
 </body>
 </html>
