@@ -103,12 +103,24 @@
           });
 
         } else {
-          // Normal data rows
-          row.forEach(cell => {
+          row.forEach((cell, colIndex) => {
             const td = document.createElement("td");
-            td.textContent = cell;
-            tr.appendChild(td);
-          });
+
+            // Column 2 = image column (index 1)
+            if (colIndex === 1) {
+            const img = document.createElement("img");
+            img.src = cell;
+            img.style.width = "40px";
+            img.style.height = "40px";
+            img.style.objectFit = "contain";
+            td.appendChild(img);
+          } else {
+          td.textContent = cell;
+          }
+
+        tr.appendChild(td);
+        });
+
         }
 
         table.appendChild(tr);
