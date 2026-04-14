@@ -56,26 +56,29 @@
       z-index: 19;
       background: White;
     }
-    /* Lock row 1 */
-    tr:nth-child(1) th {
+    
+      tr:nth-child(1) th {
       position: sticky;
       top: 0;
-      z-index: 20;
-      height: 40px;
-      line-height: 40px;
+      z-index: 50; /* keep above frozen columns */
+      height: 30px;
+      line-height: 30px;
       background: #333;
       color: white;
-    }
+      }
 
-    /* Lock row 2 */
+
     tr:nth-child(2) th,
     tr:nth-child(2) td {
-      position: sticky;
-      top: 40px; /* height of row 1 */
-      z-index: 20;
-      background: #444;
-      color: white;
+    position: sticky;
+    top: 30px; /* EXACT height of row 1 */
+    z-index: 49;
+    height: 30px;
+    line-height: 30px;
+    background: #444;
+    color: white;
     }
+
 
   </style>
 </head>
