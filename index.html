@@ -69,7 +69,7 @@ Promise.all([
     const name = row[1].trim().toLowerCase(); // "Giratina"
     let form = (row[2] || "").trim().toLowerCase(); // "Origin" or "-"
 
-    // ⭐ NEW RULE: If form is "-", treat it as empty
+    // ⭐ If form is "-" treat as no form
     if (form === "-" || form === "") {
       form = "";
     }
@@ -131,7 +131,7 @@ Promise.all([
         if (number) {
           const img = document.createElement("img");
 
-          // FORM HANDLING ON FILENAME
+          // ⭐ NEW RULE: If Regulation.csv has a form, filename includes it
           if (formKey) {
             img.src = `Images/Menu_CP_${number}-${formName}.png`;
           } else {
@@ -157,6 +157,7 @@ Promise.all([
   });
 });
 </script>
+
 
 
 
