@@ -11,10 +11,12 @@
     }
 
     .table-wrapper {
-      width: 100%;
-      overflow-x: auto;
-      border: 1px solid #ccc;
+    width: 100%;
+    max-height: 80vh; /* or whatever height you want */
+    overflow: auto;   /* enables BOTH horizontal + vertical scroll */
+    border: 1px solid #ccc;
     }
+
 
     table {
       border-collapse: collapse;
