@@ -10,17 +10,10 @@
       padding: 20px;
     }
 
-    .table-wrapper {
-    width: 100%;
-    max-height: 80vh; /* or whatever height you want */
-    overflow: auto;   /* enables BOTH horizontal + vertical scroll */
-    border: 1px solid #ccc;
-    }
-
-
     table {
       border-collapse: collapse;
       background: white;
+      width: 100%;
     }
 
     th, td {
@@ -30,56 +23,18 @@
       background: white;
     }
 
+    /* Header row heights */
+    tr:nth-child(1) th,
+    tr:nth-child(2) th,
+    tr:nth-child(2) td {
+      height: 30px;
+      line-height: 30px;
+    }
+
     /* Zebra striping */
     tr:nth-child(even) td {
       background: #f2f2f2;
     }
-
-    /* Freeze first 3 columns */
-    td:nth-child(1), th:nth-child(1) {
-      position: sticky;
-      left: 0;
-      z-index: 40; /* higher than header rows */
-      background: White;
-    }
-
-    td:nth-child(2), th:nth-child(2) {
-      position: sticky;
-      left: 120px;
-      z-index: 40;
-      background: White;
-    }
-
-    td:nth-child(3), th:nth-child(3) {
-      position: sticky;
-      left: 240px;
-      z-index: 40;
-      background: White;
-    }
-      /* lock row 1 */
-      tr:nth-child(1) th {
-      position: sticky;
-      top: 0;
-      z-index: 50; /* keep above frozen columns */
-      height: 30px;
-      line-height: 30px;
-      background: #333;
-      color: white;
-      }
-
-    /* Lock row 2 */
-    tr:nth-child(2) th,
-    tr:nth-child(2) td {
-    position: sticky;
-    top: 30px; /* EXACT height of row 1 */
-    z-index: 49;
-    height: 30px;
-    line-height: 30px;
-    background: #444;
-    color: white;
-    }
-
-
   </style>
 </head>
 
@@ -87,9 +42,7 @@
 
 <h1>VGChampions Speed Tiers</h1>
 
-<div class="table-wrapper">
-  <table id="csv-table"></table>
-</div>
+<table id="csv-table"></table>
 
 <script>
   fetch("VGChampions - SpeedTiersM-A.csv")
@@ -101,7 +54,7 @@
       rows.forEach((row, i) => {
         const tr = document.createElement("tr");
 
-        // --- MERGE HEADER CELLS ON ROW 1 ---
+        // --- MERGE HEADER CELLS ON ROW 1 (still included) ---
         if (i === 0) {
           row.forEach((cell, colIndex) => {
             let th = document.createElement("th");
@@ -113,7 +66,6 @@
               tr.appendChild(th);
             }
 
-            // Skip col 7 because it's merged
             if (colIndex === 6) return;
 
             // Merge col 8+9
@@ -157,6 +109,9 @@
       });
     });
 </script>
+
+</body>
+</html>
 
 </body>
 </html>
