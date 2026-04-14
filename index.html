@@ -67,7 +67,12 @@ Promise.all([
 
     const number = row[0].replace("#", ""); // "#001" → "001"
     const name = row[1].trim().toLowerCase(); // "Giratina"
-    const form = (row[2] || "").trim().toLowerCase(); // "Origin"
+    let form = (row[2] || "").trim().toLowerCase(); // "Origin" or "-"
+
+    // ⭐ NEW RULE: If form is "-", treat it as empty
+    if (form === "-" || form === "") {
+      form = "";
+    }
 
     if (!lookup[name]) lookup[name] = {};
     lookup[name][form] = number;
@@ -152,6 +157,7 @@ Promise.all([
   });
 });
 </script>
+
 
 
 
