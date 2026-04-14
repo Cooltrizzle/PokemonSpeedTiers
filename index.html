@@ -59,15 +59,18 @@ Promise.all([
 
   // --- Parse Regulation CSV ---
   const regRows = regText.trim().split(/\r?\n/).map(r => r.split(","));
-  const nameToNumber = {};
+  const lookup = {}; 
+  // lookup[name][form] = number
 
   regRows.forEach((row, i) => {
     if (i === 0) return; // skip header
-    const number = row[0]; // "#001"
-    const name = row[1];   // "Bulbasaur"
-    if (name && number) {
-      nameToNumber[name.toLowerCase()] = number.replace("#", "");
-    }
+
+    const number = row[0].replace("#", ""); // "#001" → "001"
+    const name = row[1].trim().toLowerCase(); // "Giratina"
+    const form = (row[2] || "").trim().toLowerCase(); // "Origin"
+
+    if (!lookup[name]) lookup[name] = {};
+    lookup[name][form] = number;
   });
 
   // --- Parse SpeedTiers CSV ---
@@ -94,12 +97,42 @@ Promise.all([
 
       if (colIndex === 1) {
         // Column 2 = IMAGE COLUMN
-        const name = row[0].trim().toLowerCase();
-        const number = nameToNumber[name];
+
+        let raw = row[0].trim(); // e.g. "Giratina-Origin"
+        let baseName = raw;
+        let formName = "";
+
+        // Detect form in SpeedTiers CSV
+        if (raw.includes("-")) {
+          const parts = raw.split("-");
+          baseName = parts[0];
+          formName = parts[1];
+        }
+
+        const nameKey = baseName.toLowerCase();
+        const formKey = formName.toLowerCase();
+
+        let number = null;
+
+        // Try form match first
+        if (lookup[nameKey] && lookup[nameKey][formKey]) {
+          number = lookup[nameKey][formKey];
+        }
+        // Try base form only (ONLY if no form in SpeedTiers)
+        else if (!formKey && lookup[nameKey] && lookup[nameKey][""]) {
+          number = lookup[nameKey][""];
+        }
 
         if (number) {
           const img = document.createElement("img");
-          img.src = `Images/Menu_CP_${number}.png`;
+
+          // FORM HANDLING ON FILENAME
+          if (formKey) {
+            img.src = `Images/Menu_CP_${number}-${formName}.png`;
+          } else {
+            img.src = `Images/Menu_CP_${number}.png`;
+          }
+
           img.style.width = "40px";
           img.style.height = "40px";
           img.style.objectFit = "contain";
@@ -119,6 +152,7 @@ Promise.all([
   });
 });
 </script>
+
 
 
 </body>
