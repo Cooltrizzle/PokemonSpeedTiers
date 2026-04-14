@@ -139,14 +139,14 @@ Promise.all([
           formName = raw.substring(idx + 1); // Everything after hyphen
         }
 
-        // ⭐ RULE 3: Keep formName EXACT for lookup
-        // (Do NOT convert spaces yet)
-        // After lookup succeeds, THEN convert spaces for filename
-        let fileFormName = formName;
-        if (fileFormName.includes(" ")) {
-          fileFormName = fileFormName.replace(/ /g, "_");
-        }
+          // ⭐ RULE 3: Convert secondary hyphens inside the form to underscores
+          // Example: "Paldea-Blaze" → "Paldea_Blaze"
+          formName = formName.replace(/-/g, "_");
 
+          // ⭐ RULE 4: Convert spaces inside the form to underscores
+          // Example: "Mega X" → "Mega_X"
+          formName = formName.replace(/ /g, "_");
+      }
 
         const nameKey = baseName.toLowerCase();
         const formKey = formName.toLowerCase();
