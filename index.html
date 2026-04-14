@@ -51,81 +51,74 @@
 <table id="csv-table"></table>
 
 <script>
-  fetch("VGChampions - SpeedTiersM-A.csv")
-    .then(r => r.text())
-    .then(text => {
-      const rows = text.trim().split(/\r?\n/).map(r => r.split(","));
-      const table = document.getElementById("csv-table");
+  // Load Regulation CSV first
+  Promise.all([
+    fetch("VGChampions - Regulation.csv").then(r => r.text()),
+    fetch("VGChampions - SpeedTiersM-A.csv").then(r => r.text())
+  ])
+  .then(([regText, speedText]) => {
 
-      rows.forEach((row, i) => {
-        const tr = document.createElement("tr");
+    // --- Parse Regulation CSV ---
+    const regRows = regText.trim().split(/\r?\n/).map(r => r.split(","));
+    const nameToNumber = {};
 
-        // --- MERGE HEADER CELLS ON ROW 1 (still included) ---
-        if (i === 0) {
-          row.forEach((cell, colIndex) => {
-            let th = document.createElement("th");
+    regRows.forEach((row, i) => {
+      if (i === 0) return; // skip header
+      const number = row[0]; // Col A (#001)
+      const name = row[1];   // Col B (Bulbasaur)
+      if (name && number) {
+        nameToNumber[name.toLowerCase()] = number.replace("#", "");
+      }
+    });
 
-            // Merge col 6+7
-            if (colIndex === 5) {
-              th.colSpan = 2;
-              th.textContent = row[5] + row[6];
-              tr.appendChild(th);
-            }
+    // --- Parse SpeedTiers CSV ---
+    const speedRows = speedText.trim().split(/\r?\n/).map(r => r.split(","));
+    const table = document.getElementById("csv-table");
 
-            if (colIndex === 6) return;
+    speedRows.forEach((row, i) => {
+      const tr = document.createElement("tr");
 
-            // Merge col 8+9
-            if (colIndex === 7) {
-              th = document.createElement("th");
-              th.colSpan = 2;
-              th.textContent = row[7] + row[8];
-              tr.appendChild(th);
-            }
+      // Header rows (your existing logic)
+      if (i === 0 || i === 1) {
+        row.forEach(cell => {
+          const th = document.createElement("th");
+          th.textContent = cell;
+          tr.appendChild(th);
+        });
+        table.appendChild(tr);
+        return;
+      }
 
-            if (colIndex === 8) return;
+      // --- Data rows ---
+      row.forEach((cell, colIndex) => {
+        const td = document.createElement("td");
 
-            // Merge col 10+11
-            if (colIndex === 9) {
-              th = document.createElement("th");
-              th.colSpan = 2;
-              th.textContent = row[9] + row[10];
-              tr.appendChild(th);
-            }
+        if (colIndex === 1) {
+          // Column 2 = IMAGE COLUMN
+          const name = row[0].trim().toLowerCase();
+          const number = nameToNumber[name];
 
-            if (colIndex === 10) return;
-
-            // Normal header cells
-            if (![5,6,7,8,9,10].includes(colIndex)) {
-              th = document.createElement("th");
-              th.textContent = cell;
-              tr.appendChild(th);
-            }
-          });
-
-        } else {
-          row.forEach((cell, colIndex) => {
-            const td = document.createElement("td");
-
-            // Column 2 = image column (index 1)
-            if (colIndex === 1) {
+          if (number) {
             const img = document.createElement("img");
-            img.src = cell;
+            img.src = `images/Menu_Home_${number}.png`;
             img.style.width = "40px";
             img.style.height = "40px";
             img.style.objectFit = "contain";
             td.appendChild(img);
           } else {
-          td.textContent = cell;
+            td.textContent = ""; // no match found
           }
 
-        tr.appendChild(td);
-        });
-
+        } else {
+          td.textContent = cell;
         }
 
-        table.appendChild(tr);
+        tr.appendChild(td);
       });
+
+      table.appendChild(tr);
     });
+  });
 </script>
 
 </body>
