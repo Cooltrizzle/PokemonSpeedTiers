@@ -139,11 +139,14 @@ Promise.all([
           formName = raw.substring(idx + 1); // Everything after hyphen
         }
 
-        // ⭐ RULE 3: Convert multi-word forms to underscore
-        // Example: "Mega X" → "Mega_X"
-        if (formName.includes(" ")) {
-          formName = formName.replace(/ /g, "_");
+        // ⭐ RULE 3: Keep formName EXACT for lookup
+        // (Do NOT convert spaces yet)
+        // After lookup succeeds, THEN convert spaces for filename
+        let fileFormName = formName;
+        if (fileFormName.includes(" ")) {
+          fileFormName = fileFormName.replace(/ /g, "_");
         }
+
 
         const nameKey = baseName.toLowerCase();
         const formKey = formName.toLowerCase();
@@ -165,7 +168,7 @@ Promise.all([
 
           // ⭐ FORM HANDLING IN FILENAME
           if (formKey) {
-            img.src = `Images/Menu_CP_${number}-${formName}.png`;
+            img.src = `Images/Menu_CP_${number}-${fileFormName}.png`;
           } else {
             img.src = `Images/Menu_CP_${number}.png`;
           }
