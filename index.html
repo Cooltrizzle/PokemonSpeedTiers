@@ -28,12 +28,21 @@
       background: white;
     }
 
-    th {
-      background: #333;
-      color: white;
+    /* Sticky header rows */
+    tr:nth-child(1) th {
       position: sticky;
       top: 0;
-      z-index: 5;
+      z-index: 10;
+      background: #333;
+      color: white;
+    }
+
+    tr:nth-child(2) th {
+      position: sticky;
+      top: 40px; /* height of row 1 */
+      z-index: 9;
+      background: #444;
+      color: white;
     }
 
     /* Zebra striping */
@@ -45,21 +54,21 @@
     td:nth-child(1), th:nth-child(1) {
       position: sticky;
       left: 0;
-      z-index: 4;
+      z-index: 8;
       background: inherit;
     }
 
     td:nth-child(2), th:nth-child(2) {
       position: sticky;
-      left: 120px; /* adjust if needed */
-      z-index: 4;
+      left: 120px;
+      z-index: 8;
       background: inherit;
     }
 
     td:nth-child(3), th:nth-child(3) {
       position: sticky;
-      left: 240px; /* adjust if needed */
-      z-index: 4;
+      left: 240px;
+      z-index: 8;
       background: inherit;
     }
   </style>
@@ -83,12 +92,57 @@
       rows.forEach((row, i) => {
         const tr = document.createElement("tr");
 
-        row.forEach(cell => {
-          const el = i === 0 ? "th" : "td";
-          const td = document.createElement(el);
-          td.textContent = cell;
-          tr.appendChild(td);
-        });
+        // --- MERGE HEADER CELLS ON ROW 1 ---
+        if (i === 0) {
+          row.forEach((cell, colIndex) => {
+            let th = document.createElement("th");
+
+            // Merge col 6+7
+            if (colIndex === 5) {
+              th.colSpan = 2;
+              th.textContent = row[5] + " / " + row[6];
+              tr.appendChild(th);
+            }
+
+            // Skip col 7 because it's merged
+            if (colIndex === 6) return;
+
+            // Merge col 8+9
+            if (colIndex === 7) {
+              th = document.createElement("th");
+              th.colSpan = 2;
+              th.textContent = row[7] + " / " + row[8];
+              tr.appendChild(th);
+            }
+
+            if (colIndex === 8) return;
+
+            // Merge col 10+11
+            if (colIndex === 9) {
+              th = document.createElement("th");
+              th.colSpan = 2;
+              th.textContent = row[9] + " / " + row[10];
+              tr.appendChild(th);
+            }
+
+            if (colIndex === 10) return;
+
+            // Normal header cells
+            if (![5,6,7,8,9,10].includes(colIndex)) {
+              th = document.createElement("th");
+              th.textContent = cell;
+              tr.appendChild(th);
+            }
+          });
+
+        } else {
+          // Normal data rows
+          row.forEach(cell => {
+            const td = document.createElement("td");
+            td.textContent = cell;
+            tr.appendChild(td);
+          });
+        }
 
         table.appendChild(tr);
       });
@@ -96,4 +150,6 @@
 </script>
 
 </body>
+</html>
+
 </html>
