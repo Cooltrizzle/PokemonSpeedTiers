@@ -1,21 +1,17 @@
 /* ============================================================
    1. TABLE WRAPPER (Scroll Window Frame)
-   ------------------------------------------------------------
-   This creates a fixed-height window with a border that
-   stays visible at all times while the table scrolls inside.
 ============================================================ */
 .table-wrapper {
-  height: 600px;            /* FIXED HEIGHT = border always visible */
+  height: 600px;            /* fixed scroll window */
   overflow-y: auto;
   overflow-x: auto;
   position: relative;
 
-  border: 2px solid #444;   /* visible border frame */
-  border-radius: 6px;       /* optional: rounded corners */
+  border: 2px solid #444;   /* always-visible frame */
+  border-radius: 6px;
   margin-top: 30px;         /* gap from top of page */
-  background: white;        /* ensures clean frame */
+  background: white;
 }
-
 
 
 /* ============================================================
@@ -41,7 +37,7 @@
 
 
 /* ============================================================
-   4. ZEBRA STRIPING (DATA ROWS ONLY)
+   4. ZEBRA STRIPING
 ============================================================ */
 #csv-table tbody tr:nth-child(odd) {
   background-color: #f9f9f9;
@@ -58,6 +54,7 @@
 #csv-table thead th {
   background: #ffffff;
   font-weight: bold;
+  text-align: center;
 }
 
 
@@ -75,13 +72,19 @@
 
 
 /* ============================================================
-   7. OPTIONAL COLUMN WIDTHS (Still Allowed)
+   7. OPTIONAL COLUMN WIDTHS
 ============================================================ */
-#csv-table th:nth-child(1),
-#csv-table td:nth-child(1) { width: 120px; }
-
-#csv-table th:nth-child(2),
-#csv-table td:nth-child(2) { width: 120px; }
+.col-1  { width: 120px; }
+.col-2  { width: 120px; }
+.col-3  { width: 120px; }
+.col-4  { width: 80px; }
+.col-5  { width: 80px; }
+.col-6  { width: 100px; }
+.col-7  { width: 100px; }
+.col-8  { width: 100px; }
+.col-9  { width: 100px; }
+.col-10 { width: 100px; }
+.col-11 { width: 100px; }
 
 #csv-table th:nth-child(3),
 #csv-table td:nth-child(3) { width: 120px; }
