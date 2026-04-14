@@ -52,16 +52,28 @@ Promise.all([
   speedRows.forEach((row, i) => {
     const tr = document.createElement("tr");
 
-    // First two rows are headers
-    if (i < 2) {
-      row.forEach(cell => {
-        const th = document.createElement("th");
-        th.textContent = cell;
-        tr.appendChild(th);
-      });
-      table.appendChild(tr);
-      return;
-    }
+    // Create THEAD for first two rows
+if (i === 0) {
+  window.thead = document.createElement("thead");
+  table.appendChild(window.thead);
+}
+
+if (i < 2) {
+  row.forEach(cell => {
+    const th = document.createElement("th");
+    th.textContent = cell;
+    tr.appendChild(th);
+  });
+  window.thead.appendChild(tr);
+  return;
+}
+
+// Create TBODY for the rest
+if (i === 2) {
+  window.tbody = document.createElement("tbody");
+  table.appendChild(window.tbody);
+}
+
 
     /* ---------------------------------------------------------
        DATA ROWS
