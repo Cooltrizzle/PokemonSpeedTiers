@@ -193,7 +193,7 @@ DEXNo,Pokemon,Form
 #0676,Furfrou,-
 #0678,Meowstic,F
 #0678,Meowstic,
-#0678,Meowstic-F,Mega
+#0678,Meowstic,Mega
 #0681,Aegislash,-
 #0683,Aromatisse,-
 #0685,Slurpuff,-
@@ -251,7 +251,7 @@ DEXNo,Pokemon,Form
 #0899,Wyrdeer,-
 #0900,Kleavor,-
 #0902,Basculegion,F
-#0902,Basculegion,
+#0902,Basculegion,-
 #0903,Sneasler,-
 #0908,Meowscarada,-
 #0911,Skeledirge,-
