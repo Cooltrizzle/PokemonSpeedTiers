@@ -39,24 +39,24 @@
     td:nth-child(1), th:nth-child(1) {
       position: sticky;
       left: 0;
-      z-index: 19; /* higher than header rows */
+      z-index: 40; /* higher than header rows */
       background: White;
     }
 
     td:nth-child(2), th:nth-child(2) {
       position: sticky;
       left: 120px;
-      z-index: 19;
+      z-index: 40;
       background: White;
     }
 
     td:nth-child(3), th:nth-child(3) {
       position: sticky;
       left: 240px;
-      z-index: 19;
+      z-index: 40;
       background: White;
     }
-    
+      /* lock row 1 */
       tr:nth-child(1) th {
       position: sticky;
       top: 0;
@@ -67,7 +67,7 @@
       color: white;
       }
 
-
+    /* Lock row 2 */
     tr:nth-child(2) th,
     tr:nth-child(2) td {
     position: sticky;
