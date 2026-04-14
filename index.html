@@ -52,24 +52,31 @@
 
 <script>
 Promise.all([
+  // Load both CSV files in parallel
   fetch("VGChampions - Regulation.csv").then(r => r.text()),
   fetch("VGChampions - SpeedTiersM-A.csv").then(r => r.text())
 ])
 .then(([regText, speedText]) => {
 
   /* ---------------------------------------------------------
-     PARSE REGULATION CSV → lookup[name][form] = number
+     PARSE REGULATION CSV
+     Builds a lookup table:
+       lookup[name][form] = number
+     Example:
+       lookup["charizard"]["mega y"] = "0006"
+       lookup["kommo-o"][""] = "0783"
   --------------------------------------------------------- */
   const regRows = regText.trim().split(/\r?\n/).map(r => r.split(","));
   const lookup = {};
 
   regRows.forEach((row, i) => {
-    if (i === 0) return;
+    if (i === 0) return; // Skip header row
 
     const number = row[0].replace("#", "");
     const name = row[1].trim().toLowerCase();
     let form = (row[2] || "").trim().toLowerCase();
 
+    // "-" or empty = no form
     if (form === "-" || form === "") form = "";
 
     if (!lookup[name]) lookup[name] = {};
@@ -85,7 +92,7 @@ Promise.all([
   speedRows.forEach((row, i) => {
     const tr = document.createElement("tr");
 
-    // Header rows
+    // First two rows are headers
     if (i < 2) {
       row.forEach(cell => {
         const th = document.createElement("th");
@@ -106,6 +113,12 @@ Promise.all([
 
         /* ---------------------------------------------------------
            IMAGE COLUMN — parse name + form
+           Handles:
+             - Base forms
+             - Single-hyphen forms
+             - Multi-hyphen forms (Tauros-Paldea-Blaze)
+             - Multi-word forms (Mega X)
+             - Kommo-o family exception
         --------------------------------------------------------- */
 
         let raw = row[0].trim(); 
@@ -122,18 +135,19 @@ Promise.all([
         else if (raw.includes("-")) {
           const idx = raw.indexOf("-");
           baseName = raw.substring(0, idx);
-          formName = raw.substring(idx + 1); // everything after first hyphen
+          formName = raw.substring(idx + 1); // EXACT form for lookup
         }
 
-        // ⭐ RULE 3: Convert secondary hyphens to underscores
-        formName = formName.replace(/-/g, "_");
+        // ⭐ lookupForm = EXACT form (spaces allowed)
+        const lookupForm = formName.toLowerCase();
 
-        // ⭐ RULE 4: Convert spaces to underscores
-        formName = formName.replace(/ /g, "_");
+        // ⭐ filename form = underscores instead of spaces/hyphens
+        let fileFormName = formName;
+        fileFormName = fileFormName.replace(/-/g, "_"); // secondary hyphens
+        fileFormName = fileFormName.replace(/ /g, "_"); // spaces
 
-        // ⭐ Keep a separate version for lookup (lowercase)
         const nameKey = baseName.toLowerCase();
-        const formKey = formName.toLowerCase();
+        const formKey = lookupForm;
 
         let number = null;
 
@@ -151,7 +165,7 @@ Promise.all([
           const img = document.createElement("img");
 
           if (formKey) {
-            img.src = `Images/Menu_CP_${number}-${formName}.png`;
+            img.src = `Images/Menu_CP_${number}-${fileFormName}.png`;
           } else {
             img.src = `Images/Menu_CP_${number}.png`;
           }
@@ -175,6 +189,7 @@ Promise.all([
   });
 });
 </script>
+
 
 
 
