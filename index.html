@@ -66,10 +66,10 @@ Promise.all([
     if (i === 0) return; // skip header
 
     const number = row[0].replace("#", ""); // "#001" → "001"
-    const name = row[1].trim().toLowerCase(); // "Giratina"
-    let form = (row[2] || "").trim().toLowerCase(); // "Origin" or "-"
+    const name = row[1].trim().toLowerCase(); // "Alakazam"
+    let form = (row[2] || "").trim().toLowerCase(); // "Mega" or "-"
 
-    // ⭐ If form is "-" treat as no form
+    // Ignore "-" forms
     if (form === "-" || form === "") {
       form = "";
     }
@@ -103,11 +103,11 @@ Promise.all([
       if (colIndex === 1) {
         // Column 2 = IMAGE COLUMN
 
-        let raw = row[0].trim(); // e.g. "Giratina-Origin"
+        let raw = row[0].trim(); // e.g. "Alakazam-Mega"
         let baseName = raw;
         let formName = "";
 
-        // Detect form in SpeedTiers CSV
+        // ⭐ NEW RULE: Hyphen means form
         if (raw.includes("-")) {
           const parts = raw.split("-");
           baseName = parts[0];
@@ -131,7 +131,7 @@ Promise.all([
         if (number) {
           const img = document.createElement("img");
 
-          // ⭐ NEW RULE: If Regulation.csv has a form, filename includes it
+          // ⭐ FORM HANDLING ON FILENAME
           if (formKey) {
             img.src = `Images/Menu_CP_${number}-${formName}.png`;
           } else {
@@ -157,6 +157,7 @@ Promise.all([
   });
 });
 </script>
+
 
 
 
