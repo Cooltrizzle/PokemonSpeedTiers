@@ -1,6 +1,8 @@
-/* ===============================
-   TABLE WRAPPER
-================================== */
+/* ============================================================
+   1. TABLE WRAPPER (Scroll Container)
+   ------------------------------------------------------------
+   Controls scrolling behavior and ensures sticky elements work.
+============================================================ */
 .table-wrapper {
   max-height: 600px;
   overflow-y: auto;
@@ -8,21 +10,57 @@
   position: relative;
 }
 
-/* ===============================
-   BASE TABLE
-================================== */
+
+/* ============================================================
+   2. BASE TABLE STYLING
+   ------------------------------------------------------------
+   General table layout, spacing, and border collapse.
+============================================================ */
 #csv-table {
   border-collapse: collapse;
   width: 100%;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
 }
 
-/* ===============================
-   STICKY HEADER ROWS (TOP 2)
-================================== */
+
+/* ============================================================
+   3. CELL BORDERS
+   ------------------------------------------------------------
+   Adds borders to all table cells (headers + data).
+============================================================ */
+#csv-table th,
+#csv-table td {
+  border: 1px solid #ccc;
+  padding: 4px 6px;
+  background: white; /* Required for sticky layering */
+}
+
+
+/* ============================================================
+   4. ZEBRA STRIPING (DATA ROWS ONLY)
+   ------------------------------------------------------------
+   Alternating row colors for readability.
+============================================================ */
+#csv-table tbody tr:nth-child(odd) {
+  background-color: #f9f9f9;
+}
+
+#csv-table tbody tr:nth-child(even) {
+  background-color: #ffffff;
+}
+
+
+/* ============================================================
+   5. STICKY HEADER ROWS (TOP 2)
+   ------------------------------------------------------------
+   Ensures header rows stay visible while scrolling.
+============================================================ */
 #csv-table thead th {
   position: sticky;
   background: white;
-  z-index: 100; /* Always above columns */
+  z-index: 100; /* Always above sticky columns */
+  height: 40px;
 }
 
 /* Row 1 */
@@ -35,21 +73,24 @@
   top: 40px; /* height of row 1 */
 }
 
-/* ===============================
-   STICKY FIRST 3 COLUMNS
-================================== */
+
+/* ============================================================
+   6. STICKY FIRST 3 COLUMNS
+   ------------------------------------------------------------
+   Columns slide under the header rows.
+============================================================ */
 #csv-table td:nth-child(1),
 #csv-table th:nth-child(1) {
   position: sticky;
   left: 0;
-  z-index: 50; /* BELOW header rows */
+  z-index: 50; /* Below header rows */
   background: white;
 }
 
 #csv-table td:nth-child(2),
 #csv-table th:nth-child(2) {
   position: sticky;
-  left: 120px;
+  left: 120px; /* width of column 1 */
   z-index: 49;
   background: white;
 }
@@ -57,23 +98,22 @@
 #csv-table td:nth-child(3),
 #csv-table th:nth-child(3) {
   position: sticky;
-  left: 240px;
+  left: 240px; /* width of columns 1 + 2 */
   z-index: 48;
   background: white;
 }
 
-/* ===============================
-   OPTIONAL COLUMN WIDTHS
-================================== */
+
+/* ============================================================
+   7. OPTIONAL COLUMN WIDTHS
+   ------------------------------------------------------------
+   Ensures sticky offsets line up perfectly.
+============================================================ */
 #csv-table th:nth-child(1),
 #csv-table td:nth-child(1) { width: 120px; }
 
 #csv-table th:nth-child(2),
 #csv-table td:nth-child(2) { width: 120px; }
-
-#csv-table th:nth-child(3),
-#csv-table td:nth-child(3) { width: 120px; }
-
 
 #csv-table th:nth-child(3),
 #csv-table td:nth-child(3) { width: 120px; }
