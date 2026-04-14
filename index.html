@@ -57,7 +57,12 @@
     async function loadCSV() {
       const response = await fetch("VGChampions-SpeedTiersM-A.csv");
       const text = await response.text();
-      const rows = text.split("\n").map(r => r.split(","));
+
+      // Split into rows, handle CRLF, trim whitespace
+      const rows = text
+        .trim()
+        .split(/\r?\n/)
+        .map(r => r.split(","));
 
       renderTable(rows);
     }
@@ -90,6 +95,10 @@
 
     loadCSV();
   </script>
+
+</body>
+</html>
+
 
 </body>
 </html>
