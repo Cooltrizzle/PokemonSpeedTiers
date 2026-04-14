@@ -1,54 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <title>Speed Tiers</title>
-
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
-    }
-
-    table {
-      border-collapse: collapse;
-      background: white;
-      width: 100%;
-    }
-
-    th, td {
-      border: 1px solid #ccc;
-      padding: 6px 10px;
-      white-space: nowrap;
-      background: white;
-    }
-
-    /* Header row heights */
-    tr:nth-child(1) th,
-    tr:nth-child(2) th,
-    tr:nth-child(2) td {
-      height: 30px;
-      line-height: 30px;
-    }
-
-    tr:nth-child(1) th {
-  font-size: 20px; /* <--- add this */
-}
-
-    
-
-    /* Zebra striping */
-    tr:nth-child(even) td {
-      background: #f2f2f2;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<h1>VGChampions Speed Tiers</h1>
-
-<table id="csv-table"></table>
+<div class="table-wrapper">
+  <table id="csv-table"></table>
+</div>
 
 <script>
 Promise.all([
@@ -189,15 +149,6 @@ Promise.all([
   });
 });
 </script>
-
-
-
-
-
-
-
-
-
 
 </body>
 </html>
