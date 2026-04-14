@@ -1,7 +1,10 @@
-<!DOCTYPE html>
-<html>
-  <body>
-    <h1>Speed Calculator Interface</h1>
-    <p>Your sheet is uploaded — UI coming soon.</p>
-  </body>
-</html>
+<h2>VGChampions - Regulation.csv</h2>
+<pre id="output"></pre>
+
+<script>
+  fetch("VGChampions - Regulation.csv")
+    .then(response => response.text())
+    .then(text => {
+      document.getElementById("output").textContent = text;
+    });
+</script>
