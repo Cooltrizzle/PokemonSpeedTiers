@@ -336,3 +336,10 @@ body, input, select, button, .calc-box, .dropdown-item {
 #csv-table tbody tr:nth-child(even) {
   background-color: #f5f5f5;
 }
+
+/* SOLID VERTICAL DIVIDER BETWEEN COL 3 AND COL 4 */
+#csv-table th.col-3,
+#csv-table td.col-3 {
+  border-right: 2px solid #444 !important;
+}
+
