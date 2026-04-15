@@ -344,7 +344,11 @@ function applySpeedHighlighting(finalSpeed) {
     row.classList.remove("speed-higher", "speed-equal");
 
     // Column 5 (index 4) = Neutral speed
-    const compare = parseInt(row.cells[4].textContent.trim(), 10);
+    const raw = row.cells[4].textContent.trim();
+    const compare = parseInt(raw, 10);
+
+    // Skip rows with invalid or missing numbers
+    if (isNaN(compare)) return;
 
     if (compare < finalSpeed) {
       row.classList.add("speed-higher");
@@ -353,6 +357,7 @@ function applySpeedHighlighting(finalSpeed) {
     }
   });
 }
+
 
   /* ============================================================
      FINAL SPEED CALCULATION (WITH BOOST)
