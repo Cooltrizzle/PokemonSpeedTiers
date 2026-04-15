@@ -304,12 +304,12 @@ body, input, select, button, .calc-box, .dropdown-item {
   width: 100%;
 }
 /* ============================================================
-   BOOST RADIO STACK
+   BOOST RADIO BUTTONS — HORIZONTAL LAYOUT
 ============================================================ */
 .boost-group {
   display: flex;
-  flex-direction: column;
-  gap: 4px;
+  flex-direction: row;   /* <-- horizontal */
+  gap: 12px;             /* spacing between buttons */
   font-size: 14px;
 }
 
