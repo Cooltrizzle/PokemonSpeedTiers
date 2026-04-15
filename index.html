@@ -341,22 +341,28 @@ Promise.all([
 ============================================================ */
 function applySpeedHighlighting(finalSpeed) {
   document.querySelectorAll("#csv-table tbody tr").forEach(row => {
-    row.classList.remove("speed-higher", "speed-equal");
 
-    // Column 5 (index 4) = Neutral speed
-    const raw = row.cells[4].textContent.trim();
-    const compare = parseInt(raw, 10);
+    // Clear old highlights
+    for (let col = 3; col <= 10; col++) {
+      row.cells[col].classList.remove("speed-higher", "speed-equal");
+    }
 
-    // Skip rows with invalid or missing numbers
-    if (isNaN(compare)) return;
+    // Columns 4 → 11 = indexes 3 → 10
+    for (let col = 3; col <= 10; col++) {
+      const raw = row.cells[col].textContent.trim();
+      const value = parseInt(raw, 10);
 
-    if (compare < finalSpeed) {
-      row.classList.add("speed-higher");
-    } else if (compare === finalSpeed) {
-      row.classList.add("speed-equal");
+      if (isNaN(value)) continue;
+
+      if (value > finalSpeed) {
+        row.cells[col].classList.add("speed-higher");
+      } else if (value === finalSpeed) {
+        row.cells[col].classList.add("speed-equal");
+      }
     }
   });
 }
+
 
 
   /* ============================================================
