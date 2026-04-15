@@ -215,3 +215,15 @@ html, body {
   font-size: 14px;
 }
 
+/* ============================================================
+   PAGE TITLE
+============================================================ */
+.page-title {
+  text-align: center;
+  font-size: 28px;
+  font-weight: bold;
+  margin: 0 0 20px 0;
+  padding: 0;
+  color: #333;
+}
+
