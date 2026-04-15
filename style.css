@@ -65,7 +65,7 @@ body, input, select, button, .calc-box, .dropdown-item {
 ============================================================ */
 .table-wrapper {
   margin-top: 10px;
-  height: calc(100% - 10px);
+  height: calc(100% - 80px);
   overflow-y: auto;
   overflow-x: auto;
   scrollbar-gutter: stable both-edges;
