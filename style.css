@@ -104,7 +104,7 @@ body, input, select, button, .calc-box, .dropdown-item {
   position: sticky;
   top: 0;
   z-index: 20;
-  background: #ffe5e5;
+  background: #d0d0d0;
   border: 1px solid #ccc;
   padding: 6px;
   text-align: center;
@@ -117,7 +117,7 @@ body, input, select, button, .calc-box, .dropdown-item {
   outline: 1px solid #ccc;
   top: 0; /* JS sets correct offset */
   z-index: 10;
-  background: #e8ffe8;
+  background: #e4e4e4;
   border-top: none;
 }
 
