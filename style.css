@@ -116,16 +116,16 @@ html, body {
 
 
 /* ============================================================
-   8. COLUMN WIDTHS — YOUR NEW RULES
+   8. COLUMN WIDTHS — OUTER COLUMNS ABSORB GUTTER
 ============================================================ */
 
-/* ⭐ col-1 autofits based on content */
-.col-1 { width: auto; }
+/* ⭐ col-1 autofits + absorbs half the gutter */
+.col-1 { width: calc(auto + 8px); }
 
 /* ⭐ col-2 fixed width */
 .col-2 { width: 80px; }
 
-/* ⭐ col-3 to col-11 evenly share remaining space */
+/* ⭐ col-3 to col-10 evenly share remaining space */
 .col-3,
 .col-4,
 .col-5,
@@ -133,7 +133,13 @@ html, body {
 .col-7,
 .col-8,
 .col-9,
-.col-10,
-.col-11 {
-  width: calc((100% - 80px) / 9);  /* 9 columns share leftover space */
+.col-10 {
+  width: calc((100% - 80px - 16px) / 8);
+  /* 8 columns share leftover space after removing:
+     - 80px (col-2)
+     - 16px (gutter absorbed by col-1 + col-11)
+  */
 }
+
+/* ⭐ col-11 absorbs the other half of the gutter */
+.col-11 { width: calc(auto + 8px); }
