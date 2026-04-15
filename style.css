@@ -1,22 +1,49 @@
 /* ============================================================
-   0. PAGE RESET FOR MOBILE (Prevents whole-page scrolling)
+   0. PAGE RESET FOR DESKTOP
+   ------------------------------------------------------------
+   We remove the mobile overflow lock since we're focusing on
+   desktop again. This keeps the page scrollable if needed.
 ============================================================ */
 html, body {
-  height: 100%;
   margin: 0;
   padding: 0;
-  overflow: hidden;   /* ⭐ stops the entire page from scrolling */
-  background: #f5f5f5; /* optional: nicer background */
+  background: #f5f5f5;
 }
 
+
 /* ============================================================
-   1. TABLE WRAPPER (Scroll Window Frame)
+   1. STATIC HEADER (Row 1 + Row 2)
+   ------------------------------------------------------------
+   This sits ABOVE the scroll window and never moves.
+============================================================ */
+.static-header {
+  margin-top: 20px;
+}
+
+.header-table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.header-table th {
+  border: 1px solid #ccc;
+  padding: 6px;
+  background: #ffffff;
+  text-align: center;
+  font-weight: bold;
+}
+
+
+/* ============================================================
+   2. TABLE WRAPPER (Scroll Window Frame)
+   ------------------------------------------------------------
+   This is your scrollable area. Only data rows scroll.
 ============================================================ */
 .table-wrapper {
-  height: calc(100vh - 150px); 
+  height: calc(100vh - 150px);
   /* 100vh = full screen height
-     minus 30px top margin
-     minus 30px bottom gap */
+     minus 120px top margin
+     minus ~30px breathing room */
 
   overflow-y: auto;
   overflow-x: auto;
@@ -24,12 +51,13 @@ html, body {
 
   border: 2px solid #444;
   border-radius: 6px;
-  margin-top: 120px;
+  margin-top: 20px; /* space between header and scroll window */
   background: white;
 }
 
+
 /* ============================================================
-   2. BASE TABLE STYLING
+   3. BASE TABLE STYLING
 ============================================================ */
 #csv-table {
   border-collapse: collapse;
@@ -40,7 +68,7 @@ html, body {
 
 
 /* ============================================================
-   3. CELL BORDERS
+   4. CELL BORDERS
 ============================================================ */
 #csv-table th,
 #csv-table td {
@@ -51,7 +79,7 @@ html, body {
 
 
 /* ============================================================
-   4. ZEBRA STRIPING
+   5. ZEBRA STRIPING
 ============================================================ */
 #csv-table tbody tr:nth-child(odd) {
   background-color: #f9f9f9;
@@ -63,7 +91,10 @@ html, body {
 
 
 /* ============================================================
-   5. HEADER ROWS (NO STICKY)
+   6. HEADER ROWS (NO STICKY)
+   ------------------------------------------------------------
+   These apply ONLY to header rows inside the scroll table.
+   (But we no longer have header rows inside the scroll table.)
 ============================================================ */
 #csv-table thead th {
   background: #ffffff;
@@ -73,7 +104,7 @@ html, body {
 
 
 /* ============================================================
-   6. FIRST 3 COLUMNS (NO STICKY)
+   7. FIRST 3 COLUMNS (NO STICKY)
 ============================================================ */
 #csv-table th:nth-child(1),
 #csv-table td:nth-child(1),
@@ -86,7 +117,9 @@ html, body {
 
 
 /* ============================================================
-   7. OPTIONAL COLUMN WIDTHS
+   8. OPTIONAL COLUMN WIDTHS
+   ------------------------------------------------------------
+   These apply to BOTH the static header and the scroll table.
 ============================================================ */
 .col-1  { width: 120px; }
 .col-2  { width: 120px; }
@@ -99,6 +132,3 @@ html, body {
 .col-9  { width: 100px; }
 .col-10 { width: 100px; }
 .col-11 { width: 100px; }
-
-#csv-table th:nth-child(3),
-#csv-table td:nth-child(3) { width: 120px; }
