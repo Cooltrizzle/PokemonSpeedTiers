@@ -19,7 +19,7 @@ html, body {
 }
 
 /* ============================================================
-   1. SELECTOR CONTAINER
+   1. SELECTOR CONTAINER (autocomplete dropdown)
 ============================================================ */
 .selector-container {
   position: relative;
@@ -59,7 +59,7 @@ html, body {
    2. TABLE WRAPPER — ONLY THIS SCROLLS
 ============================================================ */
 .table-wrapper {
-   margin-top: 200px;
+  margin-top: 200px;
   height: calc(100% - 200px);
   overflow-y: auto;
   overflow-x: auto;
@@ -69,7 +69,6 @@ html, body {
   border-radius: 6px;
   background: white;
 }
-
 
 /* ============================================================
    3. BASE TABLE STYLING
@@ -82,7 +81,6 @@ html, body {
   font-size: 14px;
 }
 
-
 /* ============================================================
    4. HEADER STYLING — STICKY ROWS
 ============================================================ */
@@ -90,8 +88,8 @@ html, body {
   outline: 1px solid #ccc;
   position: sticky;
   top: 0;
-  z-index: 20;                 /* Row 1 always on top */
-  background: #ffe5e5;         /* Light red */
+  z-index: 20;
+  background: #ffe5e5;
   border: 1px solid #ccc;
   padding: 6px;
   text-align: center;
@@ -102,10 +100,10 @@ html, body {
 /* Row 2 — sticky under row 1 */
 #csv-table thead tr.header-row-2 th {
   outline: 1px solid #ccc;
-  top: 0;                      /* JS will set correct offset */
-  z-index: 10;                 /* Below row 1, above body */
-  background: #e8ffe8;         /* Light green */
-  border-top: none;            /* Prevent border collision */
+  top: 0; /* JS sets correct offset */
+  z-index: 10;
+  background: #e8ffe8;
+  border-top: none;
 }
 
 #csv-table thead tr.header-row-2 th::after {
@@ -113,17 +111,16 @@ html, body {
   position: absolute;
   left: 0;
   right: 0;
-  bottom: -1px;        /* extend 1px below the cell */
+  bottom: -1px;
   height: 1px;
-  background: #ccc;    /* match your border color */
-  z-index: 999;        /* stays above the body rows */
+  background: #ccc;
+  z-index: 999;
 }
 
 /* Remove top border from row 1 */
 #csv-table thead tr.header-row-1 th {
   border-top: none;
 }
-
 
 /* ============================================================
    5. BODY CELL STYLING
@@ -133,7 +130,6 @@ html, body {
   padding: 4px 6px;
   background: white;
 }
-
 
 /* ============================================================
    6. ZEBRA STRIPING
@@ -145,7 +141,6 @@ html, body {
 #csv-table tbody tr:nth-child(even) {
   background-color: #ffffff;
 }
-
 
 /* ============================================================
    7. COLUMN WIDTHS
@@ -164,3 +159,58 @@ html, body {
 .col-11 {
   width: calc((100% - 80px) / 9);
 }
+
+/* ============================================================
+   8. CONTROL ROW (NEW)
+============================================================ */
+.control-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 40px; /* Option B spacing */
+  margin-bottom: 20px;
+}
+
+.control-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Image preview */
+.preview-img {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+  border: 1px solid #ccc;
+  background: white;
+}
+
+/* Nature + EV inputs */
+#natureSelect,
+#evInput {
+  padding: 6px;
+  font-size: 14px;
+  width: 120px;
+}
+
+/* Calculation output */
+.calc-box {
+  padding: 6px 12px;
+  min-width: 80px;
+  text-align: center;
+  border: 1px solid #ccc;
+  background: #f7f7f7;
+}
+
+/* ============================================================
+   9. SEARCH BOX (NEW)
+============================================================ */
+#searchBox {
+  width: 250px;
+  padding: 6px;
+  margin: 10px auto;
+  display: block;
+  font-size: 14px;
+}
+
