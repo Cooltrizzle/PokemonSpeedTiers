@@ -67,10 +67,6 @@
     ============================================================ */
     const regRows = regText.trim().split(/\r?\n/).map(r => r.split(","));
 
-    // ⭐ Insert Row1Col1 into the static header
-    const headerText = regRows[0][0] || "Header";
-    document.getElementById("hdr-1-1").textContent = headerText;
-
     // Build lookup table
     const lookup = {};
     regRows.forEach((row, i) => {
@@ -89,6 +85,9 @@
     ============================================================ */
     const speedRows = speedText.trim().split(/\r?\n/).map(r => r.split(","));
     const table = document.getElementById("csv-table");
+
+    const headerText = speedRows[0][0] || "Header";
+    document.getElementById("hdr-1-1").textContent = headerText;
 
     const tbody = document.createElement("tbody");
     table.appendChild(tbody);
