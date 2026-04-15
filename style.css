@@ -105,7 +105,7 @@ body, input, select, button, .calc-box, .dropdown-item {
   top: 0;
   z-index: 20;
   background: #d0d0d0;
-  border: 1px solid #ccc;
+  border: 1px solid #444;
   padding: 6px;
   text-align: center;
   font-weight: bold;
@@ -114,7 +114,7 @@ body, input, select, button, .calc-box, .dropdown-item {
 
 /* Row 2 — sticky under row 1 */
 #csv-table thead tr.header-row-2 th {
-  outline: 1px solid #ccc;
+  outline: 1px solid #444;
   top: 0; /* JS sets correct offset */
   z-index: 10;
   background: #e4e4e4;
@@ -162,7 +162,7 @@ body, input, select, button, .calc-box, .dropdown-item {
 ============================================================ */
 .col-1 { width: auto; }
 .col-2 { width: 80px; }
-.col-3 { width: 80px; }
+.col-3 { width: 120px; }
 
 .col-4,
 .col-5,
@@ -172,7 +172,7 @@ body, input, select, button, .calc-box, .dropdown-item {
 .col-9,
 .col-10,
 .col-11 {
-  width: calc((100% - 160px) / 8);
+  width: calc((100% - 200px) / 8);
 }
 
 /* Center columns 2–11 */
@@ -180,15 +180,6 @@ body, input, select, button, .calc-box, .dropdown-item {
 .col-7, .col-8, .col-9, .col-10, .col-11 {
   text-align: center;
 }
-
-/* Column 3 autofit */
-.col-3 {
-  width: auto !important;
-  min-width: 0 !important;
-  max-width: none !important;
-}
-
-
 
 /* ============================================================
    8. CONTROL ROW (NEW)
