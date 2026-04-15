@@ -19,6 +19,43 @@ html, body {
 }
 
 /* ============================================================
+   1. SELECTOR CONTAINER
+============================================================ */
+.selector-container {
+  position: relative;
+  width: 250px;
+  margin-bottom: 10px;
+}
+
+#nameSelector {
+  width: 100%;
+  padding: 6px;
+  font-size: 14px;
+}
+
+.dropdown-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  max-height: 200px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ccc;
+  display: none;
+  z-index: 999;
+}
+
+.dropdown-item {
+  padding: 6px;
+  cursor: pointer;
+}
+
+.dropdown-item:hover {
+  background: #eee;
+}
+
+/* ============================================================
    2. TABLE WRAPPER — ONLY THIS SCROLLS
 ============================================================ */
 .table-wrapper {
