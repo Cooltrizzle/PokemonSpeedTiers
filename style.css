@@ -64,8 +64,8 @@ body, input, select, button, .calc-box, .dropdown-item {
    2. TABLE WRAPPER — ONLY THIS SCROLLS
 ============================================================ */
 .table-wrapper {
-  margin-top: 200px;
-  height: calc(100% - 200px);
+  margin-top: 0px;
+  height: calc(100% - 0px);
   overflow-y: auto;
   overflow-x: auto;
   scrollbar-gutter: stable both-edges;
