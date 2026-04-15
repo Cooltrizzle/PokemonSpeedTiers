@@ -10,12 +10,12 @@
   <div class="page-container">
 
     <!-- ============================================================
-         STATIC HEADER
+         SCROLLABLE TABLE WITH STICKY HEADER
     ============================================================ -->
-    <div class="static-header">
-      <table class="header-table">
+    <div class="table-wrapper">
+      <table id="csv-table">
 
-        <!-- Column definitions (must match body table) -->
+        <!-- Column definitions -->
         <colgroup>
           <col class="col-1">
           <col class="col-2">
@@ -33,7 +33,7 @@
         <thead>
 
           <!-- ROW 1 -->
-          <tr id="header-row-1">
+          <tr class="header-row-1">
             <th class="col-1" colspan="3" id="hdr-1-1">Loading…</th>
             <th class="col-4">Trick Room</th>
             <th class="col-5"></th>
@@ -43,7 +43,7 @@
           </tr>
 
           <!-- ROW 2 -->
-          <tr>
+          <tr class="header-row-2">
             <th class="col-1">Name</th>
             <th class="col-2">Image</th>
             <th class="col-3">Base Speed</th>
@@ -58,30 +58,8 @@
           </tr>
 
         </thead>
-      </table>
-    </div>
 
-
-    <!-- ============================================================
-         SCROLLABLE TABLE BODY
-    ============================================================ -->
-    <div class="table-wrapper">
-      <table id="csv-table">
-
-        <!-- Column definitions (must match header table) -->
-        <colgroup>
-          <col class="col-1">
-          <col class="col-2">
-          <col class="col-3">
-          <col class="col-4">
-          <col class="col-5">
-          <col class="col-6">
-          <col class="col-7">
-          <col class="col-8">
-          <col class="col-9">
-          <col class="col-10">
-          <col class="col-11">
-        </colgroup>
+        <tbody></tbody>
 
       </table>
     </div>
@@ -90,7 +68,7 @@
 
 
   <!-- ============================================================
-       SCRIPT — LOAD CSV + BUILD TABLE + FIX HEADER WIDTH
+       SCRIPT — LOAD CSV + BUILD TABLE
   ============================================================ -->
   <script>
   Promise.all([
@@ -121,15 +99,13 @@
     ============================================================ */
     const speedRows = speedText.trim().split(/\r?\n/).map(r => r.split(","));
     const table = document.getElementById("csv-table");
+    const tbody = table.querySelector("tbody");
 
     // Set dynamic header text
     const headerText = speedRows[0][0] || "Header";
     document.getElementById("hdr-1-1").textContent = headerText;
 
     // Build table body
-    const tbody = document.createElement("tbody");
-    table.appendChild(tbody);
-
     speedRows.forEach((row, i) => {
       if (i < 2) return; // Skip header rows
 
@@ -190,35 +166,6 @@
 
       tbody.appendChild(tr);
     });
-
-    /* ============================================================
-       FIX HEADER COL-1 WIDTH TO MATCH BODY + BOTH SCROLLBAR GUTTERS
-    ============================================================ */
-    function adjustHeaderForScrollbar() {
-      const wrapper = document.querySelector('.table-wrapper');
-      const bodyCol1 = document.querySelector('#csv-table td.col-1, #csv-table th.col-1');
-      const headerCol1 = document.querySelector('.header-table col.col-1');
-
-      if (!wrapper || !bodyCol1 || !headerCol1) return;
-
-      // Measure scrollbar width (0 on mobile, ~16px on desktop)
-      const scrollbarWidth = wrapper.offsetWidth - wrapper.clientWidth;
-
-      // Total gutter = left + right
-      const totalGutter = scrollbarWidth * 2;
-
-      // Measure actual rendered width of body col-1
-      const bodyCol1Width = bodyCol1.getBoundingClientRect().width;
-
-      // Apply explicit pixel width to header col-1
-      headerCol1.style.width = `${bodyCol1Width + scrollbarwidth}px`;
-    }
-
-    // Run after table loads
-    setTimeout(adjustHeaderForScrollbar, 50);
-
-    // Re-run on resize
-    window.addEventListener('resize', adjustHeaderForScrollbar);
 
   });
   </script>
