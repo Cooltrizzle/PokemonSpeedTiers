@@ -63,7 +63,7 @@ html, body {
 }
 
 #csv-table thead tr.header-row-2 th {
-  top: 32px; /* height of row 1 */
+  top: 31px; /* height of row 1 */
   z-index: 4;
   background: #e8ffe8;   /* ⭐ light green for row 2 */
 }
