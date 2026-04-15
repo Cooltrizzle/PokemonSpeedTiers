@@ -190,6 +190,8 @@ body, input, select, button, .calc-box, .dropdown-item {
   object-fit: contain;
   /*border: 1px solid #ccc;*/
   /*background: white;*/
+   display: block;
+   margin: 0 auto;
 }
 
 /* Nature + EV inputs */
@@ -235,12 +237,12 @@ body, input, select, button, .calc-box, .dropdown-item {
 }
 
 /* ============================================================
-   CONTROL ROW BORDER (make it look like a mini-table)
+   CONTROL ROW (with proper vertical centering)
 ============================================================ */
 .control-row {
   display: flex;
+  align-items: center;      /* <-- THIS centers all items vertically */
   justify-content: center;
-  align-items: center;
   gap: 40px;
   margin-bottom: 20px;
 
@@ -249,6 +251,7 @@ body, input, select, button, .calc-box, .dropdown-item {
   border-radius: 6px;
   background: #ffffff;
 }
+
 /* ============================================================
    CONTROL ROW LABELS
 ============================================================ */
