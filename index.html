@@ -10,72 +10,69 @@
 <div class="page-container">
   <h1 class="page-title">Pokemon Speed Tier Checker</h1>
 
-
   <!-- ============================================================
-       CONTROL ROW — NAME → IMAGE → NATURE → EV → OUTPUT
+       CONTROL ROW
   ============================================================ -->
   <div class="control-row">
 
-  <!-- 1. NAME SELECTOR -->
-  <div class="control-block">
-    <div class="control-label">Pokemon</div>
-    <input id="nameSelector" type="text" placeholder="Select a name..." autocomplete="off">
-    <div id="nameDropdown" class="dropdown-list"></div>
-  </div>
+    <!-- 1. NAME SELECTOR -->
+    <div class="control-block">
+      <div class="control-label">Pokemon</div>
+      <input id="nameSelector" type="text" placeholder="Select a name..." autocomplete="off">
+      <div id="nameDropdown" class="dropdown-list"></div>
+    </div>
 
-  <!-- 2. IMAGE PREVIEW -->
-  <div class="control-block">
-    <div class="control-label">&nbsp;</div> <!-- empty label -->
-    <img id="selectedImage" src="" alt="" class="preview-img">
-  </div>
+    <!-- 2. IMAGE PREVIEW -->
+    <div class="control-block">
+      <div class="control-label">&nbsp;</div>
+      <img id="selectedImage" src="" alt="" class="preview-img">
+    </div>
 
-  <!-- 3. NATURE -->
-  <div class="control-block">
-    <div class="control-label">Nature</div>
-    <select id="natureSelect">
-      <option value="beneficial">Beneficial</option>
-      <option value="neutral" selected>Neutral</option>
-      <option value="negative">Negative</option>
-    </select>
-  </div>
+    <!-- 3. NATURE -->
+    <div class="control-block">
+      <div class="control-label">Nature</div>
+      <select id="natureSelect">
+        <option value="beneficial">Beneficial</option>
+        <option value="neutral" selected>Neutral</option>
+        <option value="negative">Negative</option>
+      </select>
+    </div>
 
-  <!-- 4. EVs -->
-  <div class="control-block">
-    <div class="control-label">EVs</div>
-    <input id="evInput" type="number" min="0" max="32" placeholder="EVs (0–32)">
-  </div>
+    <!-- 4. EVs -->
+    <div class="control-block">
+      <div class="control-label">EVs</div>
+      <input id="evInput" type="number" min="0" max="32" placeholder="EVs (0–32)">
+    </div>
 
-  <!-- 5. SPEED OUTPUT -->
-  <div class="control-block">
-    <div class="control-label">Speed Stat</div>
-    <div id="calcOutput" class="calc-box">—</div>
-  </div>
+    <!-- 5. SPEED OUTPUT -->
+    <div class="control-block">
+      <div class="control-label">Speed Stat</div>
+      <div id="calcOutput" class="calc-box">—</div>
+    </div>
 
     <!-- 6. BOOST -->
-<div class="control-block">
-  <div class="control-label">Boost</div>
-  <div class="boost-group">
-    <label><input type="radio" name="boost" value="-1"> -1</label>
-    <label><input type="radio" name="boost" value="0" checked> 0</label>
-    <label><input type="radio" name="boost" value="1"> +1</label>
-    <label><input type="radio" name="boost" value="2"> +2</label>
+    <div class="control-block">
+      <div class="control-label">Boost</div>
+      <div class="boost-group">
+        <label><input type="radio" name="boost" value="-1"> -1</label>
+        <label><input type="radio" name="boost" value="0" checked> 0</label>
+        <label><input type="radio" name="boost" value="1"> +1</label>
+        <label><input type="radio" name="boost" value="2"> +2</label>
+      </div>
+    </div>
+
   </div>
-</div>
-
-</div>
-
 
   <!-- ============================================================
-       SEARCH BOX — FILTERS TABLE ONLY
+       SEARCH BOX
   ============================================================ -->
   <div class="search-container">
-  <div class="search-label">Quick Search</div>
-  <input id="searchBox" type="text" placeholder="Search name..." />
-</div>
-
+    <div class="search-label">Quick Search</div>
+    <input id="searchBox" type="text" placeholder="Search name..." />
+  </div>
 
   <!-- ============================================================
-       SCROLLABLE TABLE WITH STICKY HEADER
+       TABLE
   ============================================================ -->
   <div class="table-wrapper">
     <table id="csv-table">
@@ -126,7 +123,9 @@
 
 </div> <!-- end page-container -->
 
-
+<!-- ============================================================
+     SCRIPT
+============================================================ -->
 <script>
 Promise.all([
   fetch("reg.csv").then(r => r.text()),
@@ -134,9 +133,6 @@ Promise.all([
 ])
 .then(([regText, speedText]) => {
 
-  /* ============================================================
-     PARSE CSV
-  ============================================================ */
   function parseCSV(text) {
     return text.trim().split("\n").map(row => row.split(","));
   }
@@ -150,7 +146,7 @@ Promise.all([
   const tableBody = document.querySelector("#csv-table tbody");
   tableBody.innerHTML = "";
 
-  speedData.forEach((row, rowIndex) => {
+  speedData.forEach(row => {
     const tr = document.createElement("tr");
 
     row.forEach((cell, colIndex) => {
@@ -164,7 +160,7 @@ Promise.all([
   });
 
   /* ============================================================
-     AUTOCOMPLETE SETUP
+     AUTOCOMPLETE
   ============================================================ */
   const nameSelector = document.getElementById("nameSelector");
   const nameDropdown = document.getElementById("nameDropdown");
@@ -184,7 +180,6 @@ Promise.all([
           nameSelector.value = name;
           updateImagePreview(name);
 
-          // RESET BOOST TO 0 WHEN NEW POKÉMON SELECTED
           document.querySelector('input[name="boost"][value="0"]').checked = true;
 
           calculateFinalSpeed();
@@ -209,32 +204,41 @@ Promise.all([
   });
 
   /* ============================================================
-     IMAGE PREVIEW
+     IMAGE PREVIEW — FIXED
   ============================================================ */
   function updateImagePreview(selectedName) {
     const img = document.getElementById("selectedImage");
-    let foundSrc = null;
 
-    document.querySelectorAll("#csv-table tbody tr").forEach(row => {
-      const name = row.cells[0].textContent.trim();
-      if (name.toLowerCase() === selectedName.toLowerCase()) {
-        const imgTag = row.cells[1].querySelector("img");
-        if (imgTag) foundSrc = imgTag.src;
-      }
-    });
-
-    if (!foundSrc) {
-      img.removeAttribute("src");
+    let regRow = regData.find(r => r[1].trim().toLowerCase() === selectedName.toLowerCase());
+    if (!regRow) {
       img.style.visibility = "hidden";
+      img.removeAttribute("src");
       return;
     }
 
-    img.src = foundSrc;
+    let num = regRow[0].replace("#", "").padStart(4, "0");
+    let path = `/Images/Menu_Home_${num}.png`;
+
+    img.src = path;
     img.style.visibility = "visible";
   }
 
   /* ============================================================
-     SPEED CALCULATION (NOW WITH BOOST)
+     CONDITIONAL FORMATTING
+  ============================================================ */
+  function applySpeedHighlighting(finalSpeed) {
+    document.querySelectorAll("#csv-table tbody tr").forEach(row => {
+      row.classList.remove("speed-higher", "speed-equal");
+
+      const compare = parseInt(row.cells[5].textContent || "0", 10);
+
+      if (compare > finalSpeed) row.classList.add("speed-higher");
+      else if (compare === finalSpeed) row.classList.add("speed-equal");
+    });
+  }
+
+  /* ============================================================
+     SPEED CALCULATION
   ============================================================ */
   function calculateFinalSpeed() {
     const selectedName = nameSelector.value.trim();
@@ -254,7 +258,6 @@ Promise.all([
     if (nature === "beneficial") finalSpeed = Math.floor(finalSpeed * 1.1);
     if (nature === "negative") finalSpeed = Math.floor(finalSpeed * 0.9);
 
-    /* BOOST MULTIPLIER */
     const boostValue = parseInt(document.querySelector('input[name="boost"]:checked').value, 10);
 
     let boostMultiplier = 1;
@@ -270,20 +273,14 @@ Promise.all([
     applySpeedHighlighting(finalSpeed);
   }
 
-  /* ============================================================
-     BOOST RADIO LISTENERS
-  ============================================================ */
   document.querySelectorAll('input[name="boost"]').forEach(radio => {
     radio.addEventListener("change", calculateFinalSpeed);
   });
 
-  /* ============================================================
-     EV INPUT LISTENER
-  ============================================================ */
   document.getElementById("evInput").addEventListener("input", calculateFinalSpeed);
 
   /* ============================================================
-     DEFAULT SELECTED POKÉMON — PIKACHU
+     DEFAULT POKEMON
   ============================================================ */
   function setDefaultPokemon() {
     const defaultName = "Pikachu";
@@ -291,7 +288,6 @@ Promise.all([
     nameSelector.value = defaultName;
     updateImagePreview(defaultName);
 
-    // RESET BOOST TO 0 ON LOAD
     document.querySelector('input[name="boost"][value="0"]').checked = true;
 
     calculateFinalSpeed();
@@ -302,7 +298,5 @@ Promise.all([
 });
 </script>
 
-
 </body>
 </html>
-
