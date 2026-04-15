@@ -119,27 +119,34 @@ html, body {
    8. COLUMN WIDTHS — OUTER COLUMNS ABSORB GUTTER
 ============================================================ */
 
-/* ⭐ col-1 autofits + absorbs half the gutter */
-.col-1 { width: calc(auto + 8px); }
-
-/* ⭐ col-2 fixed width */
-.col-2 { width: 80px; }
-
-/* ⭐ col-3 to col-10 evenly share remaining space */
-.col-3,
-.col-4,
-.col-5,
-.col-6,
-.col-7,
-.col-8,
-.col-9,
-.col-10 {
-  width: calc((100% - 80px - 16px) / 8);
-  /* 8 columns share leftover space after removing:
-     - 80px (col-2)
-     - 16px (gutter absorbed by col-1 + col-11)
-  */
+/* ⭐ Body col-1 autofits */
+#csv-table col.col-1 {
+  width: auto;
 }
 
-/* ⭐ col-11 absorbs the other half of the gutter */
-.col-11 { width: calc(auto + 8px); }
+/* ⭐ Header col-1 = body col-1 + gutter */
+.header-table col.col-1 {
+  width: calc(auto + 16px);
+}
+
+/* ⭐ col-2 fixed width */
+col.col-2 { width: 80px; }
+
+/* ⭐ col-3 to col-11 evenly share remaining space */
+col.col-3,
+col.col-4,
+col.col-5,
+col.col-6,
+col.col-7,
+col.col-8,
+col.col-9,
+col.col-10,
+col.col-11 {
+  width: calc((100% - 80px - 16px) / 9);
+}
+
+/* ⭐ Header col-11 absorbs the other half of the gutter */
+.header-table col.col-11 {
+  width: calc((100% - 80px - 16px) / 9 + 16px);
+}
+
