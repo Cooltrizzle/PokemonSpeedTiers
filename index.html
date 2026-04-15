@@ -7,110 +7,109 @@
 </head>
 <body>
 
-  <div class="page-container">
+<div class="page-container">
 
-    <!-- ============================================================
-         CONTROL ROW (Name → Image → Nature → EV → Output)
-    ============================================================ -->
-    <div class="control-row">
+  <!-- ============================================================
+       CONTROL ROW — NAME → IMAGE → NATURE → EV → OUTPUT
+  ============================================================ -->
+  <div class="control-row">
 
-      <!-- 1. NAME SELECTOR -->
-      <div class="control-block">
-        <input id="nameSelector" type="text" placeholder="Select a name..." autocomplete="off">
-        <div id="nameDropdown" class="dropdown-list"></div>
-      </div>
-
-
-      <!-- 2. IMAGE PREVIEW -->
-      <div class="control-block">
-        <img id="selectedImage" src="" alt="" class="preview-img">
-      </div>
-
-      <!-- 3. NATURE DROPDOWN -->
-      <div class="control-block">
-        <select id="natureSelect">
-          <option value="beneficial">Beneficial</option>
-          <option value="neutral">Neutral</option>
-          <option value="negative">Negative</option>
-        </select>
-      </div>
-
-      <!-- 4. EV SELECTOR -->
-      <div class="control-block">
-        <input id="evInput" type="number" min="0" max="32" placeholder="EVs (0–32)">
-      </div>
-
-      <!-- 5. CALCULATION OUTPUT -->
-      <div class="control-block">
-        <div id="calcOutput" class="calc-box">—</div>
-      </div>
-
+    <!-- 1. NAME SELECTOR (searchable dropdown) -->
+    <div class="control-block">
+      <input id="nameSelector" type="text" placeholder="Select a name..." autocomplete="off">
+      <div id="nameDropdown" class="dropdown-list"></div>
     </div>
 
-
-    <!-- ============================================================
-         SEARCH BOX (filters table)
-    ============================================================ -->
-    <input id="searchBox" type="text" placeholder="Search name..." />
-
-
-    <!-- ============================================================
-         SCROLLABLE TABLE WITH STICKY HEADER
-    ============================================================ -->
-    <div class="table-wrapper">
-      <table id="csv-table">
-
-        <colgroup>
-          <col class="col-1">
-          <col class="col-2">
-          <col class="col-3">
-          <col class="col-4">
-          <col class="col-5">
-          <col class="col-6">
-          <col class="col-7">
-          <col class="col-8">
-          <col class="col-9">
-          <col class="col-10">
-          <col class="col-11">
-        </colgroup>
-
-        <thead>
-          <tr class="header-row-1">
-            <th class="col-1" colspan="3" id="hdr-1-1">Loading…</th>
-            <th class="col-4">Trick Room</th>
-            <th class="col-5"></th>
-            <th class="col-6" colspan="2">Max EVs</th>
-            <th class="col-8" colspan="2">Single Boost / Scarf</th>
-            <th class="col-10" colspan="2">Double Boost / Tailwind</th>
-          </tr>
-
-          <tr class="header-row-2">
-            <th class="col-1">Name</th>
-            <th class="col-2">Image</th>
-            <th class="col-3">Base Speed</th>
-            <th class="col-4">Min Speed</th>
-            <th class="col-5">Neutral</th>
-            <th class="col-6">Neutral +32</th>
-            <th class="col-7">Max +32</th>
-            <th class="col-8">Neutral +32 / +1</th>
-            <th class="col-9">Max +32 / +1</th>
-            <th class="col-10">Neutral +32 / +2</th>
-            <th class="col-11">Max +32 / +2</th>
-          </tr>
-        </thead>
-
-        <tbody></tbody>
-
-      </table>
+    <!-- 2. IMAGE PREVIEW -->
+    <div class="control-block">
+      <img id="selectedImage" src="" alt="" class="preview-img">
     </div>
 
-  </div> <!-- end page-container -->
+    <!-- 3. NATURE DROPDOWN -->
+    <div class="control-block">
+      <select id="natureSelect">
+        <option value="beneficial">Beneficial</option>
+        <option value="neutral" selected>Neutral</option>
+        <option value="negative">Negative</option>
+      </select>
+    </div>
+
+    <!-- 4. EV INPUT -->
+    <div class="control-block">
+      <input id="evInput" type="number" min="0" max="32" placeholder="EVs (0–32)">
+    </div>
+
+    <!-- 5. CALCULATION OUTPUT -->
+    <div class="control-block">
+      <div id="calcOutput" class="calc-box">—</div>
+    </div>
+
+  </div>
 
 
   <!-- ============================================================
-       SCRIPT — LOAD CSV + BUILD TABLE + CONTROL ROW LOGIC
+       SEARCH BOX — FILTERS TABLE ONLY
   ============================================================ -->
-  <script>
+  <input id="searchBox" type="text" placeholder="Search name..." />
+
+
+  <!-- ============================================================
+       SCROLLABLE TABLE WITH STICKY HEADER
+  ============================================================ -->
+  <div class="table-wrapper">
+    <table id="csv-table">
+
+      <colgroup>
+        <col class="col-1">
+        <col class="col-2">
+        <col class="col-3">
+        <col class="col-4">
+        <col class="col-5">
+        <col class="col-6">
+        <col class="col-7">
+        <col class="col-8">
+        <col class="col-9">
+        <col class="col-10">
+        <col class="col-11">
+      </colgroup>
+
+      <thead>
+        <tr class="header-row-1">
+          <th class="col-1" colspan="3" id="hdr-1-1">Loading…</th>
+          <th class="col-4">Trick Room</th>
+          <th class="col-5"></th>
+          <th class="col-6" colspan="2">Max EVs</th>
+          <th class="col-8" colspan="2">Single Boost / Scarf</th>
+          <th class="col-10" colspan="2">Double Boost / Tailwind</th>
+        </tr>
+
+        <tr class="header-row-2">
+          <th class="col-1">Name</th>
+          <th class="col-2">Image</th>
+          <th class="col-3">Base Speed</th>
+          <th class="col-4">Min Speed</th>
+          <th class="col-5">Neutral</th>
+          <th class="col-6">Neutral +32</th>
+          <th class="col-7">Max +32</th>
+          <th class="col-8">Neutral +32 / +1</th>
+          <th class="col-9">Max +32 / +1</th>
+          <th class="col-10">Neutral +32 / +2</th>
+          <th class="col-11">Max +32 / +2</th>
+        </tr>
+      </thead>
+
+      <tbody></tbody>
+
+    </table>
+  </div>
+
+</div> <!-- end page-container -->
+
+
+<!-- ============================================================
+     SCRIPT — LOAD CSV + BUILD TABLE + UI LOGIC
+============================================================ -->
+<script>
 Promise.all([
   fetch("VGChampions - Regulation.csv").then(r => r.text()),
   fetch("VGChampions - SpeedTiersM-A.csv").then(r => r.text())
@@ -153,6 +152,7 @@ Promise.all([
       const td = document.createElement("td");
       td.classList.add(`col-${colIndex + 1}`);
 
+      /* IMAGE COLUMN */
       if (colIndex === 1) {
         let raw = row[0].trim();
         let baseName = raw;
@@ -231,90 +231,141 @@ Promise.all([
   });
 
 
- /* ============================================================
-   AUTOCOMPLETE NAME SELECTOR
-============================================================ */
+  /* ============================================================
+     AUTOCOMPLETE NAME SELECTOR
+  ============================================================ */
 
-// Build name list from table
-const nameList = [];
-document.querySelectorAll("#csv-table tbody tr").forEach(row => {
-  const name = row.cells[0].textContent.trim();
-  if (name) nameList.push(name);
-});
-
-const selector = document.getElementById("nameSelector");
-const dropdown = document.getElementById("nameDropdown");
-
-function updateDropdown() {
-  const filter = selector.value.toLowerCase();
-  dropdown.innerHTML = "";
-
-  const matches = nameList.filter(n => n.toLowerCase().includes(filter));
-
-  matches.forEach(name => {
-    const item = document.createElement("div");
-    item.className = "dropdown-item";
-    item.textContent = name;
-
-    item.addEventListener("click", () => {
-      selector.value = name;
-      dropdown.style.display = "none";
-      updateImagePreview(name);
-    });
-
-    dropdown.appendChild(item);
+  // Build name list from table
+  const nameList = [];
+  document.querySelectorAll("#csv-table tbody tr").forEach(row => {
+    const name = row.cells[0].textContent.trim();
+    if (name) nameList.push(name);
   });
 
-  dropdown.style.display = matches.length ? "block" : "none";
-}
+  const selector = document.getElementById("nameSelector");
+  const dropdown = document.getElementById("nameDropdown");
 
-selector.addEventListener("input", updateDropdown);
-selector.addEventListener("focus", updateDropdown);
+  function updateDropdown() {
+    const filter = selector.value.toLowerCase();
+    dropdown.innerHTML = "";
 
-// Close dropdown when clicking outside
-document.addEventListener("click", (e) => {
-  if (!selector.contains(e.target) && !dropdown.contains(e.target)) {
-    dropdown.style.display = "none";
+    const matches = nameList.filter(n => n.toLowerCase().includes(filter));
+
+    matches.forEach(name => {
+      const item = document.createElement("div");
+      item.className = "dropdown-item";
+      item.textContent = name;
+
+      item.addEventListener("click", () => {
+        selector.value = name;
+        dropdown.style.display = "none";
+        updateImagePreview(name);
+        calculateFinalSpeed();
+      });
+
+      dropdown.appendChild(item);
+    });
+
+    dropdown.style.display = matches.length ? "block" : "none";
   }
-});
-  
-/* ============================================================
-   EV INPUT — CLAMP BETWEEN 0 AND 32
-============================================================ */
-const evInput = document.getElementById("evInput");
 
-evInput.addEventListener("input", () => {
-  let val = parseInt(evInput.value, 10);
+  selector.addEventListener("input", updateDropdown);
+  selector.addEventListener("focus", updateDropdown);
 
-  if (isNaN(val)) {
-    evInput.value = "";
-    return;
-  }
+  // Close dropdown when clicking outside
+  document.addEventListener("click", (e) => {
+    if (!selector.contains(e.target) && !dropdown.contains(e.target)) {
+      dropdown.style.display = "none";
+    }
+  });
 
-  if (val < 0) evInput.value = 0;
-  if (val > 32) evInput.value = 32;
-});
 
+  /* ============================================================
+     EV INPUT — CLAMP BETWEEN 0 AND 32
+  ============================================================ */
+  const evInput = document.getElementById("evInput");
+
+  evInput.addEventListener("input", () => {
+    let val = parseInt(evInput.value, 10);
+
+    if (isNaN(val)) {
+      evInput.value = "";
+      return;
+    }
+
+    if (val < 0) evInput.value = 0;
+    if (val > 32) evInput.value = 32;
+
+    calculateFinalSpeed();
+  });
 
 
   /* ============================================================
      UPDATE IMAGE PREVIEW WHEN NAME SELECTED
   ============================================================ */
   function updateImagePreview(selectedName) {
-  const img = document.getElementById("selectedImage");
-  let foundSrc = "";
+    const img = document.getElementById("selectedImage");
+    let foundSrc = "";
 
-  document.querySelectorAll("#csv-table tbody tr").forEach(row => {
-    const name = row.cells[0].textContent.trim();
-    if (name.toLowerCase() === selectedName.toLowerCase()) {
-      const imgTag = row.cells[1].querySelector("img");
-      if (imgTag) foundSrc = imgTag.src;
+    document.querySelectorAll("#csv-table tbody tr").forEach(row => {
+      const name = row.cells[0].textContent.trim();
+      if (name.toLowerCase() === selectedName.toLowerCase()) {
+        const imgTag = row.cells[1].querySelector("img");
+        if (imgTag) foundSrc = imgTag.src;
+      }
+    });
+
+    img.src = foundSrc || "";
+  }
+
+
+  /* ============================================================
+     FINAL SPEED CALCULATION
+  ============================================================ */
+  function calculateFinalSpeed() {
+    const selectedName = document.getElementById("nameSelector").value.trim();
+    const nature = document.getElementById("natureSelect").value;
+    const ev = parseInt(document.getElementById("evInput").value, 10) || 0;
+
+    if (!selectedName) {
+      document.getElementById("calcOutput").textContent = "—";
+      return;
     }
-  });
 
-  img.src = foundSrc || "";
-}
+    // 1. Find the row for the selected Pokémon
+    let baseSpeed = null;
 
+    document.querySelectorAll("#csv-table tbody tr").forEach(row => {
+      const name = row.cells[0].textContent.trim();
+      if (name.toLowerCase() === selectedName.toLowerCase()) {
+        baseSpeed = parseInt(row.cells[2].textContent.trim(), 10);
+      }
+    });
+
+    if (baseSpeed === null) {
+      document.getElementById("calcOutput").textContent = "—";
+      return;
+    }
+
+    // 2. Base formula
+    let finalSpeed = baseSpeed + 20 + ev;
+
+    // 3. Apply nature
+    if (nature === "beneficial") finalSpeed = Math.floor(finalSpeed * 1.1);
+    if (nature === "negative") finalSpeed = Math.floor(finalSpeed * 0.9);
+
+    // 4. Output
+    document.getElementById("calcOutput").textContent = finalSpeed;
+  }
+
+  // Recalculate when name changes
+  document.getElementById("nameSelector").addEventListener("input", calculateFinalSpeed);
+
+  // Recalculate when nature changes
+  document.getElementById("natureSelect").addEventListener("change", calculateFinalSpeed);
+
+  // Recalculate when EV changes
+  document.getElementById("evInput").addEventListener("input", calculateFinalSpeed);
 
 });
 </script>
