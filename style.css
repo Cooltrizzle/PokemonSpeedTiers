@@ -22,7 +22,7 @@ html, body {
    2. TABLE WRAPPER — ONLY THIS SCROLLS
 ============================================================ */
 .table-wrapper {
-  height: calc(100% - 20px);
+  height: calc(100% - 80px);
   overflow-y: auto;
   overflow-x: auto;
   scrollbar-gutter: stable both-edges;
