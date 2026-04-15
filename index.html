@@ -337,6 +337,24 @@ Promise.all([
 
 
   /* ============================================================
+   CONDITIONAL FORMATTING — HIGHLIGHT FASTER / EQUAL
+============================================================ */
+function applySpeedHighlighting(finalSpeed) {
+  document.querySelectorAll("#csv-table tbody tr").forEach(row => {
+    row.classList.remove("speed-higher", "speed-equal");
+
+    // Column 5 (index 4) = Neutral speed
+    const compare = parseInt(row.cells[4].textContent.trim(), 10);
+
+    if (compare < finalSpeed) {
+      row.classList.add("speed-higher");
+    } else if (compare === finalSpeed) {
+      row.classList.add("speed-equal");
+    }
+  });
+}
+
+  /* ============================================================
      FINAL SPEED CALCULATION (WITH BOOST)
   ============================================================ */
   function calculateFinalSpeed() {
@@ -380,6 +398,9 @@ Promise.all([
     finalSpeed = Math.floor(finalSpeed * boostMultiplier);
 
     document.getElementById("calcOutput").textContent = finalSpeed;
+
+    // NEW: highlight rows
+  applySpeedHighlighting(finalSpeed);
   }
 
   // Recalculate on name, nature, EV
