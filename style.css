@@ -86,6 +86,16 @@ body, input, select, button, .calc-box, .dropdown-item {
   font-size: 14px;
 }
 
+/* Conditional formatting */
+.speed-higher {
+  background-color: #c8f7c5 !important; /* light green */
+}
+
+.speed-equal {
+  background-color: #fff7b2 !important; /* light yellow */
+}
+
+
 /* ============================================================
    4. HEADER STYLING — STICKY ROWS
 ============================================================ */
@@ -163,6 +173,12 @@ body, input, select, button, .calc-box, .dropdown-item {
 .col-10,
 .col-11 {
   width: calc((100% - 80px) / 9);
+}
+
+/* Center columns 2–11 */
+.col-2, .col-3, .col-4, .col-5, .col-6,
+.col-7, .col-8, .col-9, .col-10, .col-11 {
+  text-align: center;
 }
 
 /* ============================================================
