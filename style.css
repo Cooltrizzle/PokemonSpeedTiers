@@ -68,6 +68,11 @@ html, body {
   background: #e8ffe8;   /* ⭐ light green for row 2 */
 }
 
+/* ⭐ FIX 1PX GAP — REMOVE TOP BORDER FROM FIRST HEADER ROW */
+#csv-table thead tr:first-child th {
+  border-top: none;
+}
+
 
 /* ============================================================
    5. BODY CELL STYLING
