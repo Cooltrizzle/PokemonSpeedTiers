@@ -397,6 +397,9 @@ Promise.all([
     finalSpeed = Math.floor(finalSpeed * boostMultiplier);
 
     
+
+
+    
     // 4. Output
     document.getElementById("calcOutput").textContent = finalSpeed;
     applySpeedHighlighting(finalSpeed);
@@ -412,6 +415,11 @@ Promise.all([
 
   // Recalculate when EV changes
   document.getElementById("evInput").addEventListener("input", calculateFinalSpeed);
+
+  document.querySelectorAll('input[name="boost"]').forEach(radio => {
+  radio.addEventListener("change", calculateFinalSpeed);
+});
+
 
 /* ============================================================
    CONDITIONAL FORMATTING BASED ON SPEED STAT
@@ -450,6 +458,9 @@ function setDefaultPokemon() {
   // Update image preview
   updateImagePreview(defaultName);
 
+  // Reset boost to 0 when a new Pokémon is selected
+    document.querySelector('input[name="boost"][value="0"]').checked = true;
+  
   // Calculate speed
   calculateFinalSpeed();
 }
