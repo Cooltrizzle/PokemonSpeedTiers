@@ -134,169 +134,249 @@ Promise.all([
 .then(([regText, speedText]) => {
 
   /* ============================================================
-     PARSE CSV
+     PARSE REGULATION CSV → BUILD LOOKUP TABLE
   ============================================================ */
-  function parseCSV(text) {
-    return text.trim().split("\n").map(row => row.split(","));
-  }
+  const regRows = regText.trim().split(/\r?\n/).map(r => r.split(","));
+  const lookup = {};
 
-  const regData = parseCSV(regText);
-  const speedData = parseCSV(speedText);
+  regRows.forEach((row, i) => {
+    if (i === 0) return;
+    const number = row[0].replace("#", "");
+    const name = row[1].trim().toLowerCase();
+    let form = (row[2] || "").trim().toLowerCase();
+    if (form === "-" || form === "") form = "";
+    if (!lookup[name]) lookup[name] = {};
+    lookup[name][form] = number;
+  });
+
 
   /* ============================================================
-     BUILD TABLE
+     PARSE SPEEDTIERS CSV → BUILD HEADER + DATA ROWS
   ============================================================ */
-  const tableBody = document.querySelector("#csv-table tbody");
-  tableBody.innerHTML = "";
+  const speedRows = speedText.trim().split(/\r?\n/).map(r => r.split(","));
+  const table = document.getElementById("csv-table");
+  const tbody = table.querySelector("tbody");
 
-  speedData.forEach((row, rowIndex) => {
+  const headerText = speedRows[0][0] || "Header";
+  document.getElementById("hdr-1-1").textContent = headerText;
+
+  speedRows.forEach((row, i) => {
+    if (i < 2) return;
+
     const tr = document.createElement("tr");
 
     row.forEach((cell, colIndex) => {
       const td = document.createElement("td");
-      td.textContent = cell.trim();
       td.classList.add(`col-${colIndex + 1}`);
+
+      if (colIndex === 1) {
+        let raw = row[0].trim();
+        let baseName = raw;
+        let formName = "";
+
+        if (raw.toLowerCase().endsWith("-o")) {
+          baseName = raw;
+          formName = "";
+        } else if (raw.includes("-")) {
+          const idx = raw.indexOf("-");
+          baseName = raw.substring(0, idx);
+          formName = raw.substring(idx + 1);
+        }
+
+        const lookupForm = formName.toLowerCase();
+        let fileFormName = formName.replace(/-/g, "_").replace(/ /g, "_");
+
+        const nameKey = baseName.toLowerCase();
+        const formKey = lookupForm;
+
+        let number = null;
+
+        if (lookup[nameKey] && lookup[nameKey][formKey]) {
+          number = lookup[nameKey][formKey];
+        } else if (!formKey && lookup[nameKey] && lookup[nameKey][""]) {
+          number = lookup[nameKey][""];
+        }
+
+        if (number) {
+          const img = document.createElement("img");
+          img.src = formKey
+            ? `Images/Menu_CP_${number}-${fileFormName}.png`
+            : `Images/Menu_CP_${number}.png`;
+          img.style.width = "40px";
+          img.style.height = "40px";
+          img.style.objectFit = "contain";
+          td.appendChild(img);
+        } else {
+          td.textContent = "";
+        }
+
+      } else {
+        td.textContent = cell;
+      }
+
       tr.appendChild(td);
     });
 
-    tableBody.appendChild(tr);
+    tbody.appendChild(tr);
   });
 
+
   /* ============================================================
-     AUTOCOMPLETE SETUP
+     LOCK IN STICKY OFFSETS
   ============================================================ */
-  const nameSelector = document.getElementById("nameSelector");
-  const nameDropdown = document.getElementById("nameDropdown");
+  const row1 = document.querySelector("#csv-table thead tr.header-row-1");
+  const row2 = document.querySelector("#csv-table thead tr.header-row-2");
 
-  function populateDropdown(filter = "") {
-    nameDropdown.innerHTML = "";
-    const lower = filter.toLowerCase();
-
-    speedData.forEach(row => {
-      const name = row[0];
-      if (name.toLowerCase().includes(lower)) {
-        const div = document.createElement("div");
-        div.textContent = name;
-        div.classList.add("dropdown-item");
-
-        div.addEventListener("click", () => {
-          nameSelector.value = name;
-          updateImagePreview(name);
-
-          // RESET BOOST TO 0 WHEN NEW POKÉMON SELECTED
-          document.querySelector('input[name="boost"][value="0"]').checked = true;
-
-          calculateFinalSpeed();
-          nameDropdown.style.display = "none";
-        });
-
-        nameDropdown.appendChild(div);
-      }
-    });
-
-    nameDropdown.style.display = filter ? "block" : "none";
+  if (row1 && row2) {
+    const h = row1.getBoundingClientRect().height;
+    row2.querySelectorAll("th").forEach(th => th.style.top = h + "px");
   }
 
-  nameSelector.addEventListener("input", () => {
-    populateDropdown(nameSelector.value);
-  });
-
-  document.addEventListener("click", e => {
-    if (!nameDropdown.contains(e.target) && e.target !== nameSelector) {
-      nameDropdown.style.display = "none";
-    }
-  });
 
   /* ============================================================
-     IMAGE PREVIEW
+     SEARCH FILTER — FILTER ONLY COLUMN A
+  ============================================================ */
+  document.getElementById("searchBox").addEventListener("input", function () {
+    const filter = this.value.toLowerCase();
+    const rows = document.querySelectorAll("#csv-table tbody tr");
+
+    rows.forEach(row => {
+      const name = row.cells[0].textContent.toLowerCase();
+      row.style.display = name.includes(filter) ? "" : "none";
+    });
+  });
+
+
+ /* ============================================================
+   AUTOCOMPLETE NAME SELECTOR
+============================================================ */
+
+// Build name list from table
+const nameList = [];
+document.querySelectorAll("#csv-table tbody tr").forEach(row => {
+  const name = row.cells[0].textContent.trim();
+  if (name) nameList.push(name);
+});
+
+const selector = document.getElementById("nameSelector");
+const dropdown = document.getElementById("nameDropdown");
+
+function updateDropdown() {
+  const filter = selector.value.toLowerCase();
+  dropdown.innerHTML = "";
+
+  const matches = nameList.filter(n => n.toLowerCase().includes(filter));
+
+  matches.forEach(name => {
+    const item = document.createElement("div");
+    item.className = "dropdown-item";
+    item.textContent = name;
+
+    item.addEventListener("click", () => {
+      selector.value = name;
+      dropdown.style.display = "none";
+      updateImagePreview(name);
+    });
+
+    dropdown.appendChild(item);
+  });
+
+  dropdown.style.display = matches.length ? "block" : "none";
+}
+
+selector.addEventListener("input", updateDropdown);
+selector.addEventListener("focus", updateDropdown);
+
+// Close dropdown when clicking outside
+document.addEventListener("click", (e) => {
+  if (!selector.contains(e.target) && !dropdown.contains(e.target)) {
+    dropdown.style.display = "none";
+  }
+});
+  
+/* ============================================================
+   EV INPUT — CLAMP BETWEEN 0 AND 32
+============================================================ */
+const evInput = document.getElementById("evInput");
+
+evInput.addEventListener("input", () => {
+  let val = parseInt(evInput.value, 10);
+
+  if (isNaN(val)) {
+    evInput.value = "";
+    return;
+  }
+
+  if (val < 0) evInput.value = 0;
+  if (val > 32) evInput.value = 32;
+});
+
+
+
+  /* ============================================================
+     UPDATE IMAGE PREVIEW WHEN NAME SELECTED
   ============================================================ */
   function updateImagePreview(selectedName) {
-    const img = document.getElementById("selectedImage");
-    let foundSrc = null;
+  const img = document.getElementById("selectedImage");
+  let foundSrc = "";
 
-    document.querySelectorAll("#csv-table tbody tr").forEach(row => {
-      const name = row.cells[0].textContent.trim();
-      if (name.toLowerCase() === selectedName.toLowerCase()) {
-        const imgTag = row.cells[1].querySelector("img");
-        if (imgTag) foundSrc = imgTag.src;
-      }
-    });
-
-    if (!foundSrc) {
-      img.removeAttribute("src");
-      img.style.visibility = "hidden";
-      return;
+  document.querySelectorAll("#csv-table tbody tr").forEach(row => {
+    const name = row.cells[0].textContent.trim();
+    if (name.toLowerCase() === selectedName.toLowerCase()) {
+      const imgTag = row.cells[1].querySelector("img");
+      if (imgTag) foundSrc = imgTag.src;
     }
-
-    img.src = foundSrc;
-    img.style.visibility = "visible";
-  }
-
-  /* ============================================================
-     SPEED CALCULATION (NOW WITH BOOST)
-  ============================================================ */
-  function calculateFinalSpeed() {
-    const selectedName = nameSelector.value.trim();
-    const nature = document.getElementById("natureSelect").value;
-    const ev = parseInt(document.getElementById("evInput").value || "0", 10);
-
-    let baseSpeed = 0;
-
-    speedData.forEach(row => {
-      if (row[0].toLowerCase() === selectedName.toLowerCase()) {
-        baseSpeed = parseInt(row[2], 10);
-      }
-    });
-
-    let finalSpeed = baseSpeed + ev;
-
-    if (nature === "beneficial") finalSpeed = Math.floor(finalSpeed * 1.1);
-    if (nature === "negative") finalSpeed = Math.floor(finalSpeed * 0.9);
-
-    /* BOOST MULTIPLIER */
-    const boostValue = parseInt(document.querySelector('input[name="boost"]:checked').value, 10);
-
-    let boostMultiplier = 1;
-    if (boostValue === -1) boostMultiplier = 0.667;
-    if (boostValue === 0)  boostMultiplier = 1;
-    if (boostValue === 1)  boostMultiplier = 1.5;
-    if (boostValue === 2)  boostMultiplier = 2;
-
-    finalSpeed = Math.floor(finalSpeed * boostMultiplier);
-
-    document.getElementById("calcOutput").textContent = finalSpeed;
-
-    applySpeedHighlighting(finalSpeed);
-  }
-
-  /* ============================================================
-     BOOST RADIO LISTENERS
-  ============================================================ */
-  document.querySelectorAll('input[name="boost"]').forEach(radio => {
-    radio.addEventListener("change", calculateFinalSpeed);
   });
 
-  /* ============================================================
-     EV INPUT LISTENER
-  ============================================================ */
-  document.getElementById("evInput").addEventListener("input", calculateFinalSpeed);
+  img.src = foundSrc || "";
+}
 
   /* ============================================================
-     DEFAULT SELECTED POKÉMON — PIKACHU
-  ============================================================ */
-  function setDefaultPokemon() {
-    const defaultName = "Pikachu";
+   FINAL SPEED CALCULATION
+============================================================ */
+function calculateFinalSpeed() {
+  const selectedName = document.getElementById("nameSelector").value.trim();
+  const nature = document.getElementById("natureSelect").value;
+  const ev = parseInt(document.getElementById("evInput").value, 10) || 0;
 
-    nameSelector.value = defaultName;
-    updateImagePreview(defaultName);
-
-    // RESET BOOST TO 0 ON LOAD
-    document.querySelector('input[name="boost"][value="0"]').checked = true;
-
-    calculateFinalSpeed();
+  if (!selectedName) {
+    document.getElementById("calcOutput").textContent = "—";
+    return;
   }
 
-  setDefaultPokemon();
+  // 1. Find the row for the selected Pokémon
+  let baseSpeed = null;
+
+  document.querySelectorAll("#csv-table tbody tr").forEach(row => {
+    const name = row.cells[0].textContent.trim();
+    if (name.toLowerCase() === selectedName.toLowerCase()) {
+      baseSpeed = parseInt(row.cells[2].textContent.trim(), 10);
+    }
+  });
+
+  if (baseSpeed === null) {
+    document.getElementById("calcOutput").textContent = "—";
+    return;
+  }
+
+  // 2. Base formula
+  let finalSpeed = baseSpeed + 20 + ev;
+
+  // 3. Apply nature
+  if (nature === "beneficial") finalSpeed = Math.floor(finalSpeed * 1.1);
+  if (nature === "negative") finalSpeed = Math.floor(finalSpeed * 0.9);
+
+  // 4. Output
+  document.getElementById("calcOutput").textContent = finalSpeed;
+}
+// Recalculate when name changes
+document.getElementById("nameSelector").addEventListener("input", calculateFinalSpeed);
+
+// Recalculate when nature changes
+document.getElementById("natureSelect").addEventListener("change", calculateFinalSpeed);
+
+// Recalculate when EV changes
+document.getElementById("evInput").addEventListener("input", calculateFinalSpeed);
 
 });
 </script>
