@@ -1,8 +1,5 @@
 /* ============================================================
    0. PAGE RESET FOR DESKTOP
-   ------------------------------------------------------------
-   We remove the mobile overflow lock since we're focusing on
-   desktop again. This keeps the page scrollable if needed.
 ============================================================ */
 html, body {
   margin: 0;
@@ -14,15 +11,22 @@ html, body {
 /* ============================================================
    1. STATIC HEADER (Row 1 + Row 2)
    ------------------------------------------------------------
-   This sits ABOVE the scroll window and never moves.
+   - Hard up against the scroll window (no gap)
+   - Same font as table
+   - Same border style as scroll window
 ============================================================ */
 .static-header {
-  margin-top: 20px;
+  margin-top: 0;                 /* ⭐ No gap above */
+  border: 2px solid #444;        /* ⭐ Same border as scroll window */
+  border-radius: 6px 6px 0 0;    /* Top rounded corners only */
+  background: white;
 }
 
 .header-table {
   border-collapse: collapse;
   width: 100%;
+  font-family: Arial, sans-serif; /* ⭐ Same font */
+  font-size: 14px;                /* ⭐ Same size */
 }
 
 .header-table th {
@@ -37,21 +41,20 @@ html, body {
 /* ============================================================
    2. TABLE WRAPPER (Scroll Window Frame)
    ------------------------------------------------------------
-   This is your scrollable area. Only data rows scroll.
+   - Now sits directly under the static header
+   - Shares the same border (bottom + sides)
 ============================================================ */
 .table-wrapper {
   height: calc(100vh - 150px);
-  /* 100vh = full screen height
-     minus 120px top margin
-     minus ~30px breathing room */
-
   overflow-y: auto;
   overflow-x: auto;
   position: relative;
 
   border: 2px solid #444;
-  border-radius: 6px;
-  margin-top: 20px; /* space between header and scroll window */
+  border-top: none;              /* ⭐ Seamless join with header */
+  border-radius: 0 0 6px 6px;    /* Bottom rounded corners only */
+
+  margin-top: 0;                 /* ⭐ No gap between header + table */
   background: white;
 }
 
@@ -92,9 +95,6 @@ html, body {
 
 /* ============================================================
    6. HEADER ROWS (NO STICKY)
-   ------------------------------------------------------------
-   These apply ONLY to header rows inside the scroll table.
-   (But we no longer have header rows inside the scroll table.)
 ============================================================ */
 #csv-table thead th {
   background: #ffffff;
@@ -118,8 +118,6 @@ html, body {
 
 /* ============================================================
    8. OPTIONAL COLUMN WIDTHS
-   ------------------------------------------------------------
-   These apply to BOTH the static header and the scroll table.
 ============================================================ */
 .col-1  { width: 120px; }
 .col-2  { width: 120px; }
