@@ -382,6 +382,28 @@ Promise.all([
   // Recalculate when EV changes
   document.getElementById("evInput").addEventListener("input", calculateFinalSpeed);
 
+
+/* ============================================================
+   DEFAULT SELECTED POKEMON — PIKACHU
+============================================================ */
+function setDefaultPokemon() {
+  const defaultName = "Pikachu";
+
+  // Set selector text
+  document.getElementById("nameSelector").value = defaultName;
+
+  // Update image preview
+  updateImagePreview(defaultName);
+
+  // Calculate speed
+  calculateFinalSpeed();
+}
+
+// Run after everything is loaded
+setDefaultPokemon();
+
+
+  
 });
 </script>
 
