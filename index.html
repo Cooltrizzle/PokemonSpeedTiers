@@ -317,9 +317,17 @@ Promise.all([
       }
     });
 
-    img.src = foundSrc || "";
+    // If no image found → clear the preview
+  if (!foundSrc) {
+    img.removeAttribute("src");
+    img.style.visibility = "hidden";
+    return;
   }
 
+  // If found → show it
+  img.src = foundSrc;
+  img.style.visibility = "visible";
+}
 
   /* ============================================================
      FINAL SPEED CALCULATION
