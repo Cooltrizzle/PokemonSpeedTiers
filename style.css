@@ -162,8 +162,8 @@ body, input, select, button, .calc-box, .dropdown-item {
 ============================================================ */
 .col-1 { width: auto; }
 .col-2 { width: 80px; }
+.col-3 { width: 120px; }
 
-.col-3,
 .col-4,
 .col-5,
 .col-6,
@@ -172,7 +172,7 @@ body, input, select, button, .calc-box, .dropdown-item {
 .col-9,
 .col-10,
 .col-11 {
-  width: calc((100% - 80px) / 9);
+  width: calc((100% - 80px) / 8);
 }
 
 /* Center columns 2–11 */
