@@ -100,7 +100,7 @@ body, input, select, button, .calc-box, .dropdown-item {
    4. HEADER STYLING — STICKY ROWS
 ============================================================ */
 #csv-table thead th {
-  outline: 1px solid #ccc;
+  outline: 1px solid #444;
   position: sticky;
   top: 0;
   z-index: 20;
@@ -162,7 +162,7 @@ body, input, select, button, .calc-box, .dropdown-item {
 ============================================================ */
 .col-1 { width: auto; }
 .col-2 { width: 80px; }
-.col-3 { width: 120px; }
+.col-3 { width: 80px; }
 
 .col-4,
 .col-5,
@@ -172,7 +172,7 @@ body, input, select, button, .calc-box, .dropdown-item {
 .col-9,
 .col-10,
 .col-11 {
-  width: calc((100% - 80px) / 8);
+  width: calc((100% - 160px) / 8);
 }
 
 /* Center columns 2–11 */
