@@ -11,22 +11,27 @@ html, body {
 /* ============================================================
    1. STATIC HEADER (Row 1 + Row 2)
    ------------------------------------------------------------
-   - Hard up against the scroll window (no gap)
-   - Same font as table
-   - Same border style as scroll window
+   - 100px padding above header
+   - 20px padding left/right
+   - Same border as table wrapper
 ============================================================ */
 .static-header {
-  margin-top: 0;                 /* ⭐ No gap above */
-  border: 2px solid #444;        /* ⭐ Same border as scroll window */
-  border-radius: 6px 6px 0 0;    /* Top rounded corners only */
+  padding-top: 100px;            /* ⭐ 100px above header */
+  padding-left: 20px;            /* ⭐ 20px left */
+  padding-right: 20px;           /* ⭐ 20px right */
+  padding-bottom: 0;             /* no bottom padding */
+
+  margin: 0;                     /* no outer margin */
+  border: 2px solid #444;        /* same border */
+  border-radius: 6px 6px 0 0;    /* rounded top only */
   background: white;
 }
 
 .header-table {
   border-collapse: collapse;
   width: 100%;
-  font-family: Arial, sans-serif; /* ⭐ Same font */
-  font-size: 14px;                /* ⭐ Same size */
+  font-family: Arial, sans-serif;
+  font-size: 14px;
 }
 
 .header-table th {
@@ -41,8 +46,9 @@ html, body {
 /* ============================================================
    2. TABLE WRAPPER (Scroll Window Frame)
    ------------------------------------------------------------
-   - Now sits directly under the static header
-   - Shares the same border (bottom + sides)
+   - 20px left/right padding
+   - 30px bottom padding
+   - No gap between header + table
 ============================================================ */
 .table-wrapper {
   height: calc(100vh - 150px);
@@ -50,11 +56,15 @@ html, body {
   overflow-x: auto;
   position: relative;
 
-  border: 2px solid #444;
-  border-top: none;              /* ⭐ Seamless join with header */
-  border-radius: 0 0 6px 6px;    /* Bottom rounded corners only */
+  padding-left: 20px;            /* ⭐ 20px left */
+  padding-right: 20px;           /* ⭐ 20px right */
+  padding-bottom: 30px;          /* ⭐ 30px bottom padding */
 
-  margin-top: 0;                 /* ⭐ No gap between header + table */
+  border: 2px solid #444;
+  border-top: none;              /* seamless join with header */
+  border-radius: 0 0 6px 6px;
+
+  margin: 0;                     /* no gap */
   background: white;
 }
 
