@@ -383,10 +383,25 @@ Promise.all([
     if (nature === "beneficial") finalSpeed = Math.floor(finalSpeed * 1.1);
     if (nature === "negative") finalSpeed = Math.floor(finalSpeed * 0.9);
 
+    // Get boost value
+    const boostValue = parseInt(document.querySelector('input[name="boost"]:checked').value, 10);
+
+    // Convert boost to multiplier
+    let boostMultiplier = 1;
+    if (boostValue === -1) boostMultiplier = 0.667;
+    if (boostValue === 0)  boostMultiplier = 1;
+    if (boostValue === 1)  boostMultiplier = 1.5;
+    if (boostValue === 2)  boostMultiplier = 2;
+
+    // Apply boost multiplier
+    finalSpeed = Math.floor(finalSpeed * boostMultiplier);
+
+    
     // 4. Output
     document.getElementById("calcOutput").textContent = finalSpeed;
     applySpeedHighlighting(finalSpeed);
 
+    
   }
 
   // Recalculate when name changes
@@ -413,7 +428,7 @@ function applySpeedHighlighting(finalSpeed) {
       cell.classList.remove("speed-higher", "speed-equal");
 
       if (!isNaN(val)) {
-        if (val > finalSpeed) {
+        if (val < finalSpeed) {
           cell.classList.add("speed-higher");
         } else if (val === finalSpeed) {
           cell.classList.add("speed-equal");
