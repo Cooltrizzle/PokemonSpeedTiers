@@ -23,7 +23,7 @@ html, body {
 ============================================================ */
 .table-wrapper {
    margin-top: 200px;
-  height: calc(100% - margin-top);
+  height: calc(100% - 200px);
   overflow-y: auto;
   overflow-x: auto;
   scrollbar-gutter: stable both-edges;
