@@ -1,4 +1,15 @@
 /* ============================================================
+   0. PAGE RESET FOR MOBILE (Prevents whole-page scrolling)
+============================================================ */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;   /* ⭐ stops the entire page from scrolling */
+  background: #f5f5f5; /* optional: nicer background */
+}
+
+/* ============================================================
    1. TABLE WRAPPER (Scroll Window Frame)
 ============================================================ */
 .table-wrapper {
