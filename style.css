@@ -22,8 +22,8 @@ html, body {
    2. TABLE WRAPPER — ONLY THIS SCROLLS
 ============================================================ */
 .table-wrapper {
-   margin-top: 50px;
-  height: calc(100%);
+   margin-top: 200px;
+  height: calc(100% - margin-top);
   overflow-y: auto;
   overflow-x: auto;
   scrollbar-gutter: stable both-edges;
