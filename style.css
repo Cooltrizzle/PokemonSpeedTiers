@@ -181,6 +181,15 @@ body, input, select, button, .calc-box, .dropdown-item {
   text-align: center;
 }
 
+/* Column 3 autofit */
+.col-3 {
+  width: auto !important;
+  min-width: 0 !important;
+  max-width: none !important;
+}
+
+
+
 /* ============================================================
    8. CONTROL ROW (NEW)
 ============================================================ */
