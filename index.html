@@ -133,6 +133,9 @@ Promise.all([
 ])
 .then(([regText, speedText]) => {
 
+  /* ============================================================
+     PARSE CSV
+  ============================================================ */
   function parseCSV(text) {
     return text.trim().split("\n").map(row => row.split(","));
   }
@@ -146,7 +149,7 @@ Promise.all([
   const tableBody = document.querySelector("#csv-table tbody");
   tableBody.innerHTML = "";
 
-  speedData.forEach(row => {
+  speedData.forEach((row, rowIndex) => {
     const tr = document.createElement("tr");
 
     row.forEach((cell, colIndex) => {
@@ -160,7 +163,7 @@ Promise.all([
   });
 
   /* ============================================================
-     AUTOCOMPLETE
+     AUTOCOMPLETE SETUP
   ============================================================ */
   const nameSelector = document.getElementById("nameSelector");
   const nameDropdown = document.getElementById("nameDropdown");
@@ -180,6 +183,7 @@ Promise.all([
           nameSelector.value = name;
           updateImagePreview(name);
 
+          // RESET BOOST TO 0 WHEN NEW POKÉMON SELECTED
           document.querySelector('input[name="boost"][value="0"]').checked = true;
 
           calculateFinalSpeed();
@@ -204,41 +208,32 @@ Promise.all([
   });
 
   /* ============================================================
-     IMAGE PREVIEW — FIXED
+     IMAGE PREVIEW
   ============================================================ */
   function updateImagePreview(selectedName) {
     const img = document.getElementById("selectedImage");
+    let foundSrc = null;
 
-    let regRow = regData.find(r => r[1].trim().toLowerCase() === selectedName.toLowerCase());
-    if (!regRow) {
-      img.style.visibility = "hidden";
+    document.querySelectorAll("#csv-table tbody tr").forEach(row => {
+      const name = row.cells[0].textContent.trim();
+      if (name.toLowerCase() === selectedName.toLowerCase()) {
+        const imgTag = row.cells[1].querySelector("img");
+        if (imgTag) foundSrc = imgTag.src;
+      }
+    });
+
+    if (!foundSrc) {
       img.removeAttribute("src");
+      img.style.visibility = "hidden";
       return;
     }
 
-    let num = regRow[0].replace("#", "").padStart(4, "0");
-    let path = `/Images/Menu_Home_${num}.png`;
-
-    img.src = path;
+    img.src = foundSrc;
     img.style.visibility = "visible";
   }
 
   /* ============================================================
-     CONDITIONAL FORMATTING
-  ============================================================ */
-  function applySpeedHighlighting(finalSpeed) {
-    document.querySelectorAll("#csv-table tbody tr").forEach(row => {
-      row.classList.remove("speed-higher", "speed-equal");
-
-      const compare = parseInt(row.cells[5].textContent || "0", 10);
-
-      if (compare > finalSpeed) row.classList.add("speed-higher");
-      else if (compare === finalSpeed) row.classList.add("speed-equal");
-    });
-  }
-
-  /* ============================================================
-     SPEED CALCULATION
+     SPEED CALCULATION (NOW WITH BOOST)
   ============================================================ */
   function calculateFinalSpeed() {
     const selectedName = nameSelector.value.trim();
@@ -258,6 +253,7 @@ Promise.all([
     if (nature === "beneficial") finalSpeed = Math.floor(finalSpeed * 1.1);
     if (nature === "negative") finalSpeed = Math.floor(finalSpeed * 0.9);
 
+    /* BOOST MULTIPLIER */
     const boostValue = parseInt(document.querySelector('input[name="boost"]:checked').value, 10);
 
     let boostMultiplier = 1;
@@ -273,14 +269,20 @@ Promise.all([
     applySpeedHighlighting(finalSpeed);
   }
 
+  /* ============================================================
+     BOOST RADIO LISTENERS
+  ============================================================ */
   document.querySelectorAll('input[name="boost"]').forEach(radio => {
     radio.addEventListener("change", calculateFinalSpeed);
   });
 
+  /* ============================================================
+     EV INPUT LISTENER
+  ============================================================ */
   document.getElementById("evInput").addEventListener("input", calculateFinalSpeed);
 
   /* ============================================================
-     DEFAULT POKEMON
+     DEFAULT SELECTED POKÉMON — PIKACHU
   ============================================================ */
   function setDefaultPokemon() {
     const defaultName = "Pikachu";
@@ -288,6 +290,7 @@ Promise.all([
     nameSelector.value = defaultName;
     updateImagePreview(defaultName);
 
+    // RESET BOOST TO 0 ON LOAD
     document.querySelector('input[name="boost"][value="0"]').checked = true;
 
     calculateFinalSpeed();
@@ -297,6 +300,7 @@ Promise.all([
 
 });
 </script>
+
 
 </body>
 </html>
