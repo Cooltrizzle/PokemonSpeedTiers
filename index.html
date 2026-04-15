@@ -83,135 +83,182 @@
        SCRIPT — LOAD CSV + BUILD TABLE
   ============================================================ -->
   <script>
-  Promise.all([
-    fetch("VGChampions - Regulation.csv").then(r => r.text()),
-    fetch("VGChampions - SpeedTiersM-A.csv").then(r => r.text())
-  ])
-  .then(([regText, speedText]) => {
+Promise.all([
+  fetch("VGChampions - Regulation.csv").then(r => r.text()),
+  fetch("VGChampions - SpeedTiersM-A.csv").then(r => r.text())
+])
+.then(([regText, speedText]) => {
 
-    /* ============================================================
-       PARSE REGULATION CSV → BUILD LOOKUP TABLE
-    ============================================================ */
-    const regRows = regText.trim().split(/\r?\n/).map(r => r.split(","));
-    const lookup = {};
+  /* ============================================================
+     PARSE REGULATION CSV → BUILD LOOKUP TABLE
+  ============================================================ */
+  const regRows = regText.trim().split(/\r?\n/).map(r => r.split(","));
+  const lookup = {};
 
-    regRows.forEach((row, i) => {
-      if (i === 0) return;
-      const number = row[0].replace("#", "");
-      const name = row[1].trim().toLowerCase();
-      let form = (row[2] || "").trim().toLowerCase();
-      if (form === "-" || form === "") form = "";
-      if (!lookup[name]) lookup[name] = {};
-      lookup[name][form] = number;
-    });
+  regRows.forEach((row, i) => {
+    if (i === 0) return;
+    const number = row[0].replace("#", "");
+    const name = row[1].trim().toLowerCase();
+    let form = (row[2] || "").trim().toLowerCase();
+    if (form === "-" || form === "") form = "";
+    if (!lookup[name]) lookup[name] = {};
+    lookup[name][form] = number;
+  });
 
 
-    /* ============================================================
-       PARSE SPEEDTIERS CSV → BUILD HEADER + DATA ROWS
-    ============================================================ */
-    const speedRows = speedText.trim().split(/\r?\n/).map(r => r.split(","));
-    const table = document.getElementById("csv-table");
-    const tbody = table.querySelector("tbody");
+  /* ============================================================
+     PARSE SPEEDTIERS CSV → BUILD HEADER + DATA ROWS
+  ============================================================ */
+  const speedRows = speedText.trim().split(/\r?\n/).map(r => r.split(","));
+  const table = document.getElementById("csv-table");
+  const tbody = table.querySelector("tbody");
 
-    // Set dynamic header text
-    const headerText = speedRows[0][0] || "Header";
-    document.getElementById("hdr-1-1").textContent = headerText;
+  // Set dynamic header text
+  const headerText = speedRows[0][0] || "Header";
+  document.getElementById("hdr-1-1").textContent = headerText;
 
-    // Build table body
-    speedRows.forEach((row, i) => {
-      if (i < 2) return; // Skip header rows
+  // Build table body
+  speedRows.forEach((row, i) => {
+    if (i < 2) return; // Skip header rows
 
-      const tr = document.createElement("tr");
+    const tr = document.createElement("tr");
 
-      row.forEach((cell, colIndex) => {
-        const td = document.createElement("td");
-        td.classList.add(`col-${colIndex + 1}`);
+    row.forEach((cell, colIndex) => {
+      const td = document.createElement("td");
+      td.classList.add(`col-${colIndex + 1}`);
 
-        // IMAGE COLUMN
-        if (colIndex === 1) {
-          let raw = row[0].trim();
-          let baseName = raw;
-          let formName = "";
+      // IMAGE COLUMN
+      if (colIndex === 1) {
+        let raw = row[0].trim();
+        let baseName = raw;
+        let formName = "";
 
-          if (raw.toLowerCase().endsWith("-o")) {
-            baseName = raw;
-            formName = "";
-          } else if (raw.includes("-")) {
-            const idx = raw.indexOf("-");
-            baseName = raw.substring(0, idx);
-            formName = raw.substring(idx + 1);
-          }
-
-          const lookupForm = formName.toLowerCase();
-          let fileFormName = formName.replace(/-/g, "_").replace(/ /g, "_");
-
-          const nameKey = baseName.toLowerCase();
-          const formKey = lookupForm;
-
-          let number = null;
-
-          if (lookup[nameKey] && lookup[nameKey][formKey]) {
-            number = lookup[nameKey][formKey];
-          } else if (!formKey && lookup[nameKey] && lookup[nameKey][""]) {
-            number = lookup[nameKey][""];
-          }
-
-          if (number) {
-            const img = document.createElement("img");
-            img.src = formKey
-              ? `Images/Menu_CP_${number}-${fileFormName}.png`
-              : `Images/Menu_CP_${number}.png`;
-            img.style.width = "40px";
-            img.style.height = "40px";
-            img.style.objectFit = "contain";
-            td.appendChild(img);
-          } else {
-            td.textContent = "";
-          }
-
-        } else {
-          td.textContent = cell;
+        if (raw.toLowerCase().endsWith("-o")) {
+          baseName = raw;
+          formName = "";
+        } else if (raw.includes("-")) {
+          const idx = raw.indexOf("-");
+          baseName = raw.substring(0, idx);
+          formName = raw.substring(idx + 1);
         }
 
-        tr.appendChild(td);
-      });
+        const lookupForm = formName.toLowerCase();
+        let fileFormName = formName.replace(/-/g, "_").replace(/ /g, "_");
 
-      tbody.appendChild(tr);
+        const nameKey = baseName.toLowerCase();
+        const formKey = lookupForm;
+
+        let number = null;
+
+        if (lookup[nameKey] && lookup[nameKey][formKey]) {
+          number = lookup[nameKey][formKey];
+        } else if (!formKey && lookup[nameKey] && lookup[nameKey][""]) {
+          number = lookup[nameKey][""];
+        }
+
+        if (number) {
+          const img = document.createElement("img");
+          img.src = formKey
+            ? `Images/Menu_CP_${number}-${fileFormName}.png`
+            : `Images/Menu_CP_${number}.png`;
+          img.style.width = "40px";
+          img.style.height = "40px";
+          img.style.objectFit = "contain";
+          td.appendChild(img);
+        } else {
+          td.textContent = "";
+        }
+
+      } else {
+        td.textContent = cell;
+      }
+
+      tr.appendChild(td);
     });
 
+    tbody.appendChild(tr);
+  });
 
-    /* ============================================================
-       LOCK IN STICKY OFFSETS
-    ============================================================ */
-    const row1 = document.querySelector("#csv-table thead tr.header-row-1");
-    const row2 = document.querySelector("#csv-table thead tr.header-row-2");
 
-    if (row1 && row2) {
-      const h = row1.getBoundingClientRect().height;
+  /* ============================================================
+     LOCK IN STICKY OFFSETS
+  ============================================================ */
+  const row1 = document.querySelector("#csv-table thead tr.header-row-1");
+  const row2 = document.querySelector("#csv-table thead tr.header-row-2");
 
-      row2.querySelectorAll("th").forEach(th => {
-        th.style.top = h + "px";
-      });
+  if (row1 && row2) {
+    const h = row1.getBoundingClientRect().height;
 
-      console.log("Sticky offset locked:", h, "px");
-    }
+    row2.querySelectorAll("th").forEach(th => {
+      th.style.top = h + "px";
+    });
 
-    /* ============================================================
+    console.log("Sticky offset locked:", h, "px");
+  }
+
+
+  /* ============================================================
      SEARCH FILTER — FILTER ONLY COLUMN A (NAME)
-    ============================================================ */
-    document.getElementById("searchBox").addEventListener("input", function () {
+  ============================================================ */
+  document.getElementById("searchBox").addEventListener("input", function () {
     const filter = this.value.toLowerCase();
     const rows = document.querySelectorAll("#csv-table tbody tr");
 
     rows.forEach(row => {
-        const name = row.cells[0].textContent.toLowerCase();
-        row.style.display = name.includes(filter) ? "" : "none";
+      const name = row.cells[0].textContent.toLowerCase();
+      row.style.display = name.includes(filter) ? "" : "none";
     });
-});
-
-    
   });
-  </script>
+
+
+  /* ============================================================
+     AUTOCOMPLETE NAME SELECTOR (Column A list)
+  ============================================================ */
+
+  // Build name list from table
+  const nameList = [];
+  document.querySelectorAll("#csv-table tbody tr").forEach(row => {
+    const name = row.cells[0].textContent.trim();
+    if (name) nameList.push(name);
+  });
+
+  const selector = document.getElementById("nameSelector");
+  const dropdown = document.getElementById("nameDropdown");
+
+  function updateDropdown() {
+    const filter = selector.value.toLowerCase();
+    dropdown.innerHTML = "";
+
+    const matches = nameList.filter(n => n.toLowerCase().includes(filter));
+
+    matches.forEach(name => {
+      const item = document.createElement("div");
+      item.className = "dropdown-item";
+      item.textContent = name;
+
+      item.addEventListener("click", () => {
+        selector.value = name;   // stays in the box
+        dropdown.style.display = "none";
+      });
+
+      dropdown.appendChild(item);
+    });
+
+    dropdown.style.display = matches.length ? "block" : "none";
+  }
+
+  selector.addEventListener("input", updateDropdown);
+  selector.addEventListener("focus", updateDropdown);
+
+  document.addEventListener("click", (e) => {
+    if (!selector.contains(e.target) && !dropdown.contains(e.target)) {
+      dropdown.style.display = "none";
+    }
+  });
+
+});
+</script>
+
 
 </body>
 </html>
