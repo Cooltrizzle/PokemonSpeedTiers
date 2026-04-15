@@ -51,11 +51,10 @@ html, body {
    4. HEADER STYLING — STICKY ROWS
 ============================================================ */
 #csv-table thead th {
-   outline: 1px solid red !important;
   position: sticky;
   top: 0;
-  z-index: 5;
-  background: #ffe5e5;   /* ⭐ light red for row 1 */
+  z-index: 20;                 /* Row 1 always on top */
+  background: #ffe5e5;         /* Light red */
   border: 1px solid #ccc;
   padding: 6px;
   text-align: center;
@@ -63,15 +62,16 @@ html, body {
   height: 32px;
 }
 
+/* Row 2 — sticky under row 1 */
 #csv-table thead tr.header-row-2 th {
-   outline: 1px solid blue !important;
-  top: 32px; /* height of row 1 */
-  z-index: 4;
-  background: #e8ffe8;   /* ⭐ light green for row 2 */
+  top: 0;                      /* JS will set correct offset */
+  z-index: 10;                 /* Below row 1, above body */
+  background: #e8ffe8;         /* Light green */
+  border-top: none;            /* Prevent border collision */
 }
 
-/* ⭐ FIX 1PX GAP — REMOVE TOP BORDER FROM FIRST HEADER ROW */
-#csv-table thead tr:first-child th {
+/* Remove top border from row 1 */
+#csv-table thead tr.header-row-1 th {
   border-top: none;
 }
 
