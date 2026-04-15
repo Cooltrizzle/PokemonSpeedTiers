@@ -6,7 +6,7 @@ html, body {
   padding: 0;
   height: 100%;
   overflow: hidden;
-  background: #f5f5f5;
+  background: #e8f2ff;
 }
 
 body, input, select, button, .calc-box, .dropdown-item {
