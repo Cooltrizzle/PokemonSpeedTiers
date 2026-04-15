@@ -167,8 +167,26 @@
       tbody.appendChild(tr);
     });
 
+
+    /* ============================================================
+       LOCK IN STICKY OFFSETS
+    ============================================================ */
+    const row1 = document.querySelector("#csv-table thead tr.header-row-1");
+    const row2 = document.querySelector("#csv-table thead tr.header-row-2");
+
+    if (row1 && row2) {
+      const h = row1.getBoundingClientRect().height;
+
+      row2.querySelectorAll("th").forEach(th => {
+        th.style.top = h + "px";
+      });
+
+      console.log("Sticky offset locked:", h, "px");
+    }
+
   });
   </script>
 
 </body>
 </html>
+
