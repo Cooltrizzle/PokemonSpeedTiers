@@ -35,7 +35,7 @@ html, body {
 .header-table {
   border-collapse: collapse;
   width: 100%;
-  table-layout: fixed;     /* ⭐ Required for even column distribution */
+  table-layout: fixed;     /* ⭐ Required for synced column widths */
   font-family: Arial, sans-serif;
   font-size: 14px;
 }
@@ -53,9 +53,12 @@ html, body {
    3. TABLE WRAPPER — ONLY THIS SCROLLS
 ============================================================ */
 .table-wrapper {
-  height: calc(100% - 90px);  
+  height: calc(100% - 90px);
   overflow-y: auto;
   overflow-x: auto;
+
+  /* ⭐ FIX: Reserve scrollbar space so header + body widths match */
+  scrollbar-gutter: stable both-edges;
 
   border: 2px solid #444;
   border-top: none;               /* ⭐ Seamless join with header */
