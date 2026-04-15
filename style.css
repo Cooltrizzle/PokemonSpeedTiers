@@ -303,4 +303,19 @@ body, input, select, button, .calc-box, .dropdown-item {
   text-align: center;
   width: 100%;
 }
+/* ============================================================
+   BOOST RADIO STACK
+============================================================ */
+.boost-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 14px;
+}
+
+.boost-group label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
 
