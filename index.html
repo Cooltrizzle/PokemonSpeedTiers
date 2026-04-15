@@ -203,12 +203,8 @@
     });
 
   });
-    /* ============================================================
-   FIX HEADER COL-1 WIDTH TO MATCH BODY + SCROLLBAR WIDTH
-   ------------------------------------------------------------
-   Desktop scrollbars take space (≈16px), mobile scrollbars do not.
-   We measure the actual scrollbar width and add it to the header's
-   col-1 so the header and body columns align perfectly everywhere.
+/* ============================================================
+   FIX HEADER COL-1 WIDTH TO MATCH BODY + BOTH SCROLLBAR GUTTERS
 ============================================================ */
 function adjustHeaderForScrollbar() {
   const wrapper = document.querySelector('.table-wrapper');
@@ -219,8 +215,11 @@ function adjustHeaderForScrollbar() {
   // Measure scrollbar width (0 on mobile, ~16px on desktop)
   const scrollbarWidth = wrapper.offsetWidth - wrapper.clientWidth;
 
+  // Total gutter = left + right
+  const totalGutter = scrollbarWidth * 2;
+
   // Apply compensation to header col-1 only
-  headerCol1.style.width = `calc(auto + ${scrollbarWidth}px)`;
+  headerCol1.style.width = `calc(auto + ${totalGutter}px)`;
 }
 
 // Run after table loads
