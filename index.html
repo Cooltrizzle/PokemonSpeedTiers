@@ -9,25 +9,56 @@
 
   <div class="page-container">
 
-<!-- ============================================================
-         SEARCH BOX
+    <!-- ============================================================
+         CONTROL ROW (Name → Image → Nature → EV → Output)
     ============================================================ -->
-  <input id="searchBox" type="text" placeholder="Search name..." />
+    <div class="control-row">
 
-<!-- ============================================================
-         SELECTOR CONTAINER
+      <!-- 1. NAME SELECTOR -->
+      <div class="control-block">
+        <input id="nameSelector" type="text" placeholder="Select a name..." autocomplete="off">
+        <div id="nameDropdown" class="dropdown-list"></div>
+      </div>
+
+      <!-- 2. IMAGE PREVIEW -->
+      <div class="control-block">
+        <img id="selectedImage" src="" alt="" class="preview-img">
+      </div>
+
+      <!-- 3. NATURE DROPDOWN -->
+      <div class="control-block">
+        <select id="natureSelect">
+          <option value="beneficial">Beneficial</option>
+          <option value="neutral">Neutral</option>
+          <option value="negative">Negative</option>
+        </select>
+      </div>
+
+      <!-- 4. EV SELECTOR -->
+      <div class="control-block">
+        <input id="evInput" type="number" min="0" max="32" placeholder="EVs (0–32)">
+      </div>
+
+      <!-- 5. CALCULATION OUTPUT -->
+      <div class="control-block">
+        <div id="calcOutput" class="calc-box">—</div>
+      </div>
+
+    </div>
+
+
+    <!-- ============================================================
+         SEARCH BOX (filters table)
     ============================================================ -->
-<div class="selector-container">
-  <input id="nameSelector" type="text" placeholder="Select a name..." autocomplete="off">
-  <div id="nameDropdown" class="dropdown-list"></div>
-</div>
+    <input id="searchBox" type="text" placeholder="Search name..." />
+
+
     <!-- ============================================================
          SCROLLABLE TABLE WITH STICKY HEADER
     ============================================================ -->
     <div class="table-wrapper">
       <table id="csv-table">
 
-        <!-- Column definitions -->
         <colgroup>
           <col class="col-1">
           <col class="col-2">
@@ -43,8 +74,6 @@
         </colgroup>
 
         <thead>
-
-          <!-- ROW 1 -->
           <tr class="header-row-1">
             <th class="col-1" colspan="3" id="hdr-1-1">Loading…</th>
             <th class="col-4">Trick Room</th>
@@ -54,7 +83,6 @@
             <th class="col-10" colspan="2">Double Boost / Tailwind</th>
           </tr>
 
-          <!-- ROW 2 -->
           <tr class="header-row-2">
             <th class="col-1">Name</th>
             <th class="col-2">Image</th>
@@ -68,7 +96,6 @@
             <th class="col-10">Neutral +32 / +2</th>
             <th class="col-11">Max +32 / +2</th>
           </tr>
-
         </thead>
 
         <tbody></tbody>
@@ -80,7 +107,7 @@
 
 
   <!-- ============================================================
-       SCRIPT — LOAD CSV + BUILD TABLE
+       SCRIPT — LOAD CSV + BUILD TABLE + CONTROL ROW LOGIC
   ============================================================ -->
   <script>
 Promise.all([
@@ -113,13 +140,11 @@ Promise.all([
   const table = document.getElementById("csv-table");
   const tbody = table.querySelector("tbody");
 
-  // Set dynamic header text
   const headerText = speedRows[0][0] || "Header";
   document.getElementById("hdr-1-1").textContent = headerText;
 
-  // Build table body
   speedRows.forEach((row, i) => {
-    if (i < 2) return; // Skip header rows
+    if (i < 2) return;
 
     const tr = document.createElement("tr");
 
@@ -127,7 +152,6 @@ Promise.all([
       const td = document.createElement("td");
       td.classList.add(`col-${colIndex + 1}`);
 
-      // IMAGE COLUMN
       if (colIndex === 1) {
         let raw = row[0].trim();
         let baseName = raw;
@@ -188,17 +212,12 @@ Promise.all([
 
   if (row1 && row2) {
     const h = row1.getBoundingClientRect().height;
-
-    row2.querySelectorAll("th").forEach(th => {
-      th.style.top = h + "px";
-    });
-
-    console.log("Sticky offset locked:", h, "px");
+    row2.querySelectorAll("th").forEach(th => th.style.top = h + "px");
   }
 
 
   /* ============================================================
-     SEARCH FILTER — FILTER ONLY COLUMN A (NAME)
+     SEARCH FILTER — FILTER ONLY COLUMN A
   ============================================================ */
   document.getElementById("searchBox").addEventListener("input", function () {
     const filter = this.value.toLowerCase();
@@ -212,10 +231,8 @@ Promise.all([
 
 
   /* ============================================================
-     AUTOCOMPLETE NAME SELECTOR (Column A list)
+     AUTOCOMPLETE NAME SELECTOR
   ============================================================ */
-
-  // Build name list from table
   const nameList = [];
   document.querySelectorAll("#csv-table tbody tr").forEach(row => {
     const name = row.cells[0].textContent.trim();
@@ -237,8 +254,9 @@ Promise.all([
       item.textContent = name;
 
       item.addEventListener("click", () => {
-        selector.value = name;   // stays in the box
+        selector.value = name;
         dropdown.style.display = "none";
+        updateImagePreview(name);
       });
 
       dropdown.appendChild(item);
@@ -256,9 +274,27 @@ Promise.all([
     }
   });
 
+
+  /* ============================================================
+     UPDATE IMAGE PREVIEW WHEN NAME SELECTED
+  ============================================================ */
+  function updateImagePreview(selectedName) {
+    const img = document.getElementById("selectedImage");
+    let foundSrc = "";
+
+    document.querySelectorAll("#csv-table tbody tr").forEach(row => {
+      const name = row.cells[0].textContent.trim();
+      if (name.toLowerCase() === selectedName.toLowerCase()) {
+        const imgTag = row.cells[1].querySelector("img");
+        if (imgTag) foundSrc = imgTag.src;
+      }
+    });
+
+    img.src = foundSrc || "";
+  }
+
 });
 </script>
-
 
 </body>
 </html>
