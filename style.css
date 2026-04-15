@@ -72,6 +72,17 @@ html, body {
   border-top: none;            /* Prevent border collision */
 }
 
+#csv-table thead tr.header-row-2 th::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;        /* extend 1px below the cell */
+  height: 1px;
+  background: #ccc;    /* match your border color */
+  z-index: 999;        /* stays above the body rows */
+}
+
 /* Remove top border from row 1 */
 #csv-table thead tr.header-row-1 th {
   border-top: none;
