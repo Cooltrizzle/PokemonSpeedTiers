@@ -16,37 +16,42 @@
   ============================================================ -->
   <div class="control-row">
 
-    <!-- 1. NAME SELECTOR (searchable dropdown) -->
-    <div class="control-block">
-      <input id="nameSelector" type="text" placeholder="Select a name..." autocomplete="off">
-      <div id="nameDropdown" class="dropdown-list"></div>
-    </div>
-
-    <!-- 2. IMAGE PREVIEW -->
-    <div class="control-block">
-      <img id="selectedImage" src="" alt="" class="preview-img">
-    </div>
-
-    <!-- 3. NATURE DROPDOWN -->
-    <div class="control-block">
-      <select id="natureSelect">
-        <option value="beneficial">Beneficial</option>
-        <option value="neutral" selected>Neutral</option>
-        <option value="negative">Negative</option>
-      </select>
-    </div>
-
-    <!-- 4. EV INPUT -->
-    <div class="control-block">
-      <input id="evInput" type="number" min="0" max="32" placeholder="EVs (0–32)">
-    </div>
-
-    <!-- 5. CALCULATION OUTPUT -->
-    <div class="control-block">
-      <div id="calcOutput" class="calc-box">—</div>
-    </div>
-
+  <!-- 1. NAME SELECTOR -->
+  <div class="control-block">
+    <div class="control-label">Pokemon</div>
+    <input id="nameSelector" type="text" placeholder="Select a name..." autocomplete="off">
+    <div id="nameDropdown" class="dropdown-list"></div>
   </div>
+
+  <!-- 2. IMAGE PREVIEW -->
+  <div class="control-block">
+    <div class="control-label">&nbsp;</div> <!-- empty label -->
+    <img id="selectedImage" src="" alt="" class="preview-img">
+  </div>
+
+  <!-- 3. NATURE -->
+  <div class="control-block">
+    <div class="control-label">Nature</div>
+    <select id="natureSelect">
+      <option value="beneficial">Beneficial</option>
+      <option value="neutral" selected>Neutral</option>
+      <option value="negative">Negative</option>
+    </select>
+  </div>
+
+  <!-- 4. EVs -->
+  <div class="control-block">
+    <div class="control-label">EVs</div>
+    <input id="evInput" type="number" min="0" max="32" placeholder="EVs (0–32)">
+  </div>
+
+  <!-- 5. SPEED OUTPUT -->
+  <div class="control-block">
+    <div class="control-label">Speed Stat</div>
+    <div id="calcOutput" class="calc-box">—</div>
+  </div>
+
+</div>
 
 
   <!-- ============================================================
