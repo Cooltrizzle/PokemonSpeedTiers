@@ -1,29 +1,35 @@
 /* ============================================================
-   0. PAGE RESET FOR DESKTOP
+   0. PAGE RESET — PAGE DOES NOT SCROLL
 ============================================================ */
 html, body {
   margin: 0;
   padding: 0;
+  height: 100%;
+  overflow: hidden;        /* ⭐ Only the table scrolls */
   background: #f5f5f5;
 }
 
 
 /* ============================================================
-   1. STATIC HEADER (Row 1 + Row 2)
+   1. PAGE CONTAINER — OUTSIDE PADDING
    ------------------------------------------------------------
-   - 100px padding above header
-   - 20px padding left/right
-   - Same border as table wrapper
+   This is where your 100px top, 20px sides, 30px bottom go.
+   The border stays tight around the header + table.
+============================================================ */
+.page-container {
+  box-sizing: border-box;
+  height: 100%;
+  padding: 100px 20px 30px 20px;   /* ⭐ 100 top, 20 sides, 30 bottom */
+}
+
+
+/* ============================================================
+   2. STATIC HEADER (Row 1 + Row 2)
 ============================================================ */
 .static-header {
-  padding-top: 100px;            /* ⭐ 100px above header */
-  padding-left: 20px;            /* ⭐ 20px left */
-  padding-right: 20px;           /* ⭐ 20px right */
-  padding-bottom: 0;             /* no bottom padding */
-
-  margin: 0;                     /* no outer margin */
-  border: 2px solid #444;        /* same border */
-  border-radius: 6px 6px 0 0;    /* rounded top only */
+  margin: 0;
+  border: 2px solid #444;
+  border-radius: 6px 6px 0 0;
   background: white;
 }
 
@@ -44,33 +50,26 @@ html, body {
 
 
 /* ============================================================
-   2. TABLE WRAPPER (Scroll Window Frame)
-   ------------------------------------------------------------
-   - 20px left/right padding
-   - 30px bottom padding
-   - No gap between header + table
+   3. TABLE WRAPPER — ONLY THIS SCROLLS
 ============================================================ */
 .table-wrapper {
-  height: calc(100vh - 150px);
+  height: calc(100% - 90px);  
+  /* Explanation:
+     - header height is dynamic
+     - wrapper fills remaining space inside padded container */
+
   overflow-y: auto;
   overflow-x: auto;
-  position: relative;
-
-  padding-left: 20px;            /* ⭐ 20px left */
-  padding-right: 20px;           /* ⭐ 20px right */
-  padding-bottom: 30px;          /* ⭐ 30px bottom padding */
 
   border: 2px solid #444;
-  border-top: none;              /* seamless join with header */
+  border-top: none;               /* seamless join with header */
   border-radius: 0 0 6px 6px;
-
-  margin: 0;                     /* no gap */
   background: white;
 }
 
 
 /* ============================================================
-   3. BASE TABLE STYLING
+   4. BASE TABLE STYLING
 ============================================================ */
 #csv-table {
   border-collapse: collapse;
@@ -81,7 +80,7 @@ html, body {
 
 
 /* ============================================================
-   4. CELL BORDERS
+   5. CELL BORDERS
 ============================================================ */
 #csv-table th,
 #csv-table td {
@@ -92,7 +91,7 @@ html, body {
 
 
 /* ============================================================
-   5. ZEBRA STRIPING
+   6. ZEBRA STRIPING
 ============================================================ */
 #csv-table tbody tr:nth-child(odd) {
   background-color: #f9f9f9;
@@ -100,16 +99,6 @@ html, body {
 
 #csv-table tbody tr:nth-child(even) {
   background-color: #ffffff;
-}
-
-
-/* ============================================================
-   6. HEADER ROWS (NO STICKY)
-============================================================ */
-#csv-table thead th {
-  background: #ffffff;
-  font-weight: bold;
-  text-align: center;
 }
 
 
@@ -127,7 +116,7 @@ html, body {
 
 
 /* ============================================================
-   8. OPTIONAL COLUMN WIDTHS
+   8. COLUMN WIDTHS
 ============================================================ */
 .col-1  { width: 120px; }
 .col-2  { width: 120px; }
