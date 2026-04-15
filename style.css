@@ -13,8 +13,7 @@ html, body {
 /* ============================================================
    1. PAGE CONTAINER — OUTSIDE PADDING
    ------------------------------------------------------------
-   This is where your 100px top, 20px sides, 30px bottom go.
-   The border stays tight around the header + table.
+   Padding is OUTSIDE the border so the border stays tight.
 ============================================================ */
 .page-container {
   box-sizing: border-box;
@@ -36,6 +35,7 @@ html, body {
 .header-table {
   border-collapse: collapse;
   width: 100%;
+  table-layout: fixed;     /* ⭐ Required for even column distribution */
   font-family: Arial, sans-serif;
   font-size: 14px;
 }
@@ -54,15 +54,11 @@ html, body {
 ============================================================ */
 .table-wrapper {
   height: calc(100% - 90px);  
-  /* Explanation:
-     - header height is dynamic
-     - wrapper fills remaining space inside padded container */
-
   overflow-y: auto;
   overflow-x: auto;
 
   border: 2px solid #444;
-  border-top: none;               /* seamless join with header */
+  border-top: none;               /* ⭐ Seamless join with header */
   border-radius: 0 0 6px 6px;
   background: white;
 }
@@ -74,6 +70,7 @@ html, body {
 #csv-table {
   border-collapse: collapse;
   width: 100%;
+  table-layout: fixed;     /* ⭐ Matches header table */
   font-family: Arial, sans-serif;
   font-size: 14px;
 }
@@ -116,16 +113,24 @@ html, body {
 
 
 /* ============================================================
-   8. COLUMN WIDTHS
+   8. COLUMN WIDTHS — YOUR NEW RULES
 ============================================================ */
-.col-1  { width: 120px; }
-.col-2  { width: 120px; }
-.col-3  { width: 120px; }
-.col-4  { width: 80px; }
-.col-5  { width: 80px; }
-.col-6  { width: 100px; }
-.col-7  { width: 100px; }
-.col-8  { width: 100px; }
-.col-9  { width: 100px; }
-.col-10 { width: 100px; }
-.col-11 { width: 100px; }
+
+/* ⭐ col-1 autofits based on content */
+.col-1 { width: auto; }
+
+/* ⭐ col-2 fixed width */
+.col-2 { width: 80px; }
+
+/* ⭐ col-3 to col-11 evenly share remaining space */
+.col-3,
+.col-4,
+.col-5,
+.col-6,
+.col-7,
+.col-8,
+.col-9,
+.col-10,
+.col-11 {
+  width: calc((100% - 80px) / 9);  /* 9 columns share leftover space */
+}
