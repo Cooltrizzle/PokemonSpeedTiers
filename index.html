@@ -247,139 +247,166 @@ Promise.all([
   });
 
 
- /* ============================================================
-   AUTOCOMPLETE NAME SELECTOR
-============================================================ */
+  /* ============================================================
+     AUTOCOMPLETE NAME SELECTOR
+  ============================================================ */
+  const nameList = [];
+  document.querySelectorAll("#csv-table tbody tr").forEach(row => {
+    const name = row.cells[0].textContent.trim();
+    if (name) nameList.push(name);
+  });
 
-// Build name list from table
-const nameList = [];
-document.querySelectorAll("#csv-table tbody tr").forEach(row => {
-  const name = row.cells[0].textContent.trim();
-  if (name) nameList.push(name);
-});
+  const selector = document.getElementById("nameSelector");
+  const dropdown = document.getElementById("nameDropdown");
 
-const selector = document.getElementById("nameSelector");
-const dropdown = document.getElementById("nameDropdown");
+  function updateDropdown() {
+    const filter = selector.value.toLowerCase();
+    dropdown.innerHTML = "";
 
-function updateDropdown() {
-  const filter = selector.value.toLowerCase();
-  dropdown.innerHTML = "";
+    const matches = nameList.filter(n => n.toLowerCase().includes(filter));
 
-  const matches = nameList.filter(n => n.toLowerCase().includes(filter));
+    matches.forEach(name => {
+      const item = document.createElement("div");
+      item.className = "dropdown-item";
+      item.textContent = name;
 
-  matches.forEach(name => {
-    const item = document.createElement("div");
-    item.className = "dropdown-item";
-    item.textContent = name;
+      item.addEventListener("click", () => {
+        selector.value = name;
+        dropdown.style.display = "none";
+        updateImagePreview(name);
 
-    item.addEventListener("click", () => {
-      selector.value = name;
-      dropdown.style.display = "none";
-      updateImagePreview(name);
+        // Reset boost to 0 when selecting a new Pokémon
+        document.querySelector('input[name="boost"][value="0"]').checked = true;
+
+        calculateFinalSpeed();
+      });
+
+      dropdown.appendChild(item);
     });
 
-    dropdown.appendChild(item);
+    dropdown.style.display = matches.length ? "block" : "none";
+  }
+
+  selector.addEventListener("input", updateDropdown);
+  selector.addEventListener("focus", updateDropdown);
+
+  document.addEventListener("click", (e) => {
+    if (!selector.contains(e.target) && !dropdown.contains(e.target)) {
+      dropdown.style.display = "none";
+    }
   });
-
-  dropdown.style.display = matches.length ? "block" : "none";
-}
-
-selector.addEventListener("input", updateDropdown);
-selector.addEventListener("focus", updateDropdown);
-
-// Close dropdown when clicking outside
-document.addEventListener("click", (e) => {
-  if (!selector.contains(e.target) && !dropdown.contains(e.target)) {
-    dropdown.style.display = "none";
-  }
-});
-  
-/* ============================================================
-   EV INPUT — CLAMP BETWEEN 0 AND 32
-============================================================ */
-const evInput = document.getElementById("evInput");
-
-evInput.addEventListener("input", () => {
-  let val = parseInt(evInput.value, 10);
-
-  if (isNaN(val)) {
-    evInput.value = "";
-    return;
-  }
-
-  if (val < 0) evInput.value = 0;
-  if (val > 32) evInput.value = 32;
-});
-
 
 
   /* ============================================================
-     UPDATE IMAGE PREVIEW WHEN NAME SELECTED
+     EV INPUT — CLAMP BETWEEN 0 AND 32
+  ============================================================ */
+  const evInput = document.getElementById("evInput");
+
+  evInput.addEventListener("input", () => {
+    let val = parseInt(evInput.value, 10);
+
+    if (isNaN(val)) {
+      evInput.value = "";
+      return;
+    }
+
+    if (val < 0) evInput.value = 0;
+    if (val > 32) evInput.value = 32;
+
+    calculateFinalSpeed();
+  });
+
+
+  /* ============================================================
+     UPDATE IMAGE PREVIEW
   ============================================================ */
   function updateImagePreview(selectedName) {
-  const img = document.getElementById("selectedImage");
-  let foundSrc = "";
+    const img = document.getElementById("selectedImage");
+    let foundSrc = "";
 
-  document.querySelectorAll("#csv-table tbody tr").forEach(row => {
-    const name = row.cells[0].textContent.trim();
-    if (name.toLowerCase() === selectedName.toLowerCase()) {
-      const imgTag = row.cells[1].querySelector("img");
-      if (imgTag) foundSrc = imgTag.src;
-    }
-  });
+    document.querySelectorAll("#csv-table tbody tr").forEach(row => {
+      const name = row.cells[0].textContent.trim();
+      if (name.toLowerCase() === selectedName.toLowerCase()) {
+        const imgTag = row.cells[1].querySelector("img");
+        if (imgTag) foundSrc = imgTag.src;
+      }
+    });
 
-  img.src = foundSrc || "";
-}
+    img.src = foundSrc || "";
+  }
+
 
   /* ============================================================
-   FINAL SPEED CALCULATION
-============================================================ */
-function calculateFinalSpeed() {
-  const selectedName = document.getElementById("nameSelector").value.trim();
-  const nature = document.getElementById("natureSelect").value;
-  const ev = parseInt(document.getElementById("evInput").value, 10) || 0;
+     FINAL SPEED CALCULATION (WITH BOOST)
+  ============================================================ */
+  function calculateFinalSpeed() {
+    const selectedName = selector.value.trim();
+    const nature = document.getElementById("natureSelect").value;
+    const ev = parseInt(evInput.value, 10) || 0;
 
-  if (!selectedName) {
-    document.getElementById("calcOutput").textContent = "—";
-    return;
+    if (!selectedName) {
+      document.getElementById("calcOutput").textContent = "—";
+      return;
+    }
+
+    let baseSpeed = null;
+
+    document.querySelectorAll("#csv-table tbody tr").forEach(row => {
+      const name = row.cells[0].textContent.trim();
+      if (name.toLowerCase() === selectedName.toLowerCase()) {
+        baseSpeed = parseInt(row.cells[2].textContent.trim(), 10);
+      }
+    });
+
+    if (baseSpeed === null) {
+      document.getElementById("calcOutput").textContent = "—";
+      return;
+    }
+
+    let finalSpeed = baseSpeed + 20 + ev;
+
+    if (nature === "beneficial") finalSpeed = Math.floor(finalSpeed * 1.1);
+    if (nature === "negative") finalSpeed = Math.floor(finalSpeed * 0.9);
+
+    // BOOST MULTIPLIER
+    const boostValue = parseInt(document.querySelector('input[name="boost"]:checked').value, 10);
+
+    let boostMultiplier = 1;
+    if (boostValue === -1) boostMultiplier = 0.667;
+    if (boostValue === 0)  boostMultiplier = 1;
+    if (boostValue === 1)  boostMultiplier = 1.5;
+    if (boostValue === 2)  boostMultiplier = 2;
+
+    finalSpeed = Math.floor(finalSpeed * boostMultiplier);
+
+    document.getElementById("calcOutput").textContent = finalSpeed;
   }
 
-  // 1. Find the row for the selected Pokémon
-  let baseSpeed = null;
+  // Recalculate on name, nature, EV
+  selector.addEventListener("input", calculateFinalSpeed);
+  document.getElementById("natureSelect").addEventListener("change", calculateFinalSpeed);
 
-  document.querySelectorAll("#csv-table tbody tr").forEach(row => {
-    const name = row.cells[0].textContent.trim();
-    if (name.toLowerCase() === selectedName.toLowerCase()) {
-      baseSpeed = parseInt(row.cells[2].textContent.trim(), 10);
-    }
+
+  /* ============================================================
+     BOOST RADIO BUTTON LISTENERS
+  ============================================================ */
+  document.querySelectorAll('input[name="boost"]').forEach(radio => {
+    radio.addEventListener("change", calculateFinalSpeed);
   });
 
-  if (baseSpeed === null) {
-    document.getElementById("calcOutput").textContent = "—";
-    return;
-  }
 
-  // 2. Base formula
-  let finalSpeed = baseSpeed + 20 + ev;
+  /* ============================================================
+     DEFAULT POKÉMON = PIKACHU
+  ============================================================ */
+  selector.value = "Pikachu";
+  updateImagePreview("Pikachu");
+  document.querySelector('input[name="boost"][value="0"]').checked = true;
+  calculateFinalSpeed();
 
-  // 3. Apply nature
-  if (nature === "beneficial") finalSpeed = Math.floor(finalSpeed * 1.1);
-  if (nature === "negative") finalSpeed = Math.floor(finalSpeed * 0.9);
-
-  // 4. Output
-  document.getElementById("calcOutput").textContent = finalSpeed;
-}
-// Recalculate when name changes
-document.getElementById("nameSelector").addEventListener("input", calculateFinalSpeed);
-
-// Recalculate when nature changes
-document.getElementById("natureSelect").addEventListener("change", calculateFinalSpeed);
-
-// Recalculate when EV changes
-document.getElementById("evInput").addEventListener("input", calculateFinalSpeed);
 
 });
 </script>
+
 
 
 </body>
