@@ -128,7 +128,7 @@
 ============================================================ -->
 <script>
 Promise.all([
-  fetch("VGChampions - RegulationM-A.csv").then(r => r.text()),
+  fetch("VGChampions - Regulation.csv").then(r => r.text()),
   fetch("VGChampions - SpeedTiers.csv").then(r => r.text())
 ])
 .then(([regText, speedText]) => {
