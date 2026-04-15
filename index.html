@@ -20,6 +20,7 @@
         <div id="nameDropdown" class="dropdown-list"></div>
       </div>
 
+
       <!-- 2. IMAGE PREVIEW -->
       <div class="control-block">
         <img id="selectedImage" src="" alt="" class="preview-img">
@@ -230,68 +231,73 @@ Promise.all([
   });
 
 
-  /* ============================================================
-     AUTOCOMPLETE NAME SELECTOR
-  ============================================================ */
-  const nameList = [];
-  document.querySelectorAll("#csv-table tbody tr").forEach(row => {
-    const name = row.cells[0].textContent.trim();
-    if (name) nameList.push(name);
-  });
+ /* ============================================================
+   AUTOCOMPLETE NAME SELECTOR
+============================================================ */
 
-  const selector = document.getElementById("nameSelector");
-  const dropdown = document.getElementById("nameDropdown");
+// Build name list from table
+const nameList = [];
+document.querySelectorAll("#csv-table tbody tr").forEach(row => {
+  const name = row.cells[0].textContent.trim();
+  if (name) nameList.push(name);
+});
 
-  function updateDropdown() {
-    const filter = selector.value.toLowerCase();
-    dropdown.innerHTML = "";
+const selector = document.getElementById("nameSelector");
+const dropdown = document.getElementById("nameDropdown");
 
-    const matches = nameList.filter(n => n.toLowerCase().includes(filter));
+function updateDropdown() {
+  const filter = selector.value.toLowerCase();
+  dropdown.innerHTML = "";
 
-    matches.forEach(name => {
-      const item = document.createElement("div");
-      item.className = "dropdown-item";
-      item.textContent = name;
+  const matches = nameList.filter(n => n.toLowerCase().includes(filter));
 
-      item.addEventListener("click", () => {
-        selector.value = name;
-        dropdown.style.display = "none";
-        updateImagePreview(name);
-      });
+  matches.forEach(name => {
+    const item = document.createElement("div");
+    item.className = "dropdown-item";
+    item.textContent = name;
 
-      dropdown.appendChild(item);
+    item.addEventListener("click", () => {
+      selector.value = name;
+      dropdown.style.display = "none";
+      updateImagePreview(name);
     });
 
-    dropdown.style.display = matches.length ? "block" : "none";
-  }
-
-  selector.addEventListener("input", updateDropdown);
-  selector.addEventListener("focus", updateDropdown);
-
-  document.addEventListener("click", (e) => {
-    if (!selector.contains(e.target) && !dropdown.contains(e.target)) {
-      dropdown.style.display = "none";
-    }
+    dropdown.appendChild(item);
   });
+
+  dropdown.style.display = matches.length ? "block" : "none";
+}
+
+selector.addEventListener("input", updateDropdown);
+selector.addEventListener("focus", updateDropdown);
+
+// Close dropdown when clicking outside
+document.addEventListener("click", (e) => {
+  if (!selector.contains(e.target) && !dropdown.contains(e.target)) {
+    dropdown.style.display = "none";
+  }
+});
+
 
 
   /* ============================================================
      UPDATE IMAGE PREVIEW WHEN NAME SELECTED
   ============================================================ */
   function updateImagePreview(selectedName) {
-    const img = document.getElementById("selectedImage");
-    let foundSrc = "";
+  const img = document.getElementById("selectedImage");
+  let foundSrc = "";
 
-    document.querySelectorAll("#csv-table tbody tr").forEach(row => {
-      const name = row.cells[0].textContent.trim();
-      if (name.toLowerCase() === selectedName.toLowerCase()) {
-        const imgTag = row.cells[1].querySelector("img");
-        if (imgTag) foundSrc = imgTag.src;
-      }
-    });
+  document.querySelectorAll("#csv-table tbody tr").forEach(row => {
+    const name = row.cells[0].textContent.trim();
+    if (name.toLowerCase() === selectedName.toLowerCase()) {
+      const imgTag = row.cells[1].querySelector("img");
+      if (imgTag) foundSrc = imgTag.src;
+    }
+  });
 
-    img.src = foundSrc || "";
-  }
+  img.src = foundSrc || "";
+}
+
 
 });
 </script>
