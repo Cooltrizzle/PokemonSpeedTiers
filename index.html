@@ -277,6 +277,23 @@ document.addEventListener("click", (e) => {
     dropdown.style.display = "none";
   }
 });
+  
+/* ============================================================
+   EV INPUT — CLAMP BETWEEN 0 AND 32
+============================================================ */
+const evInput = document.getElementById("evInput");
+
+evInput.addEventListener("input", () => {
+  let val = parseInt(evInput.value, 10);
+
+  if (isNaN(val)) {
+    evInput.value = "";
+    return;
+  }
+
+  if (val < 0) evInput.value = 0;
+  if (val > 32) evInput.value = 32;
+});
 
 
 
