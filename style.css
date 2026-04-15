@@ -173,6 +173,7 @@ html, body {
 
 .control-block {
   display: flex;
+  position: relative; /* allows dropdown to anchor correctly */
   flex-direction: column;
   align-items: center;
 }
