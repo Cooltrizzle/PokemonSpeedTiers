@@ -54,7 +54,7 @@ html, body {
   position: sticky;
   top: 0;
   z-index: 5;
-  background: white;
+  background: #ffe5e5;   /* ⭐ light red for row 1 */
   border: 1px solid #ccc;
   padding: 6px;
   text-align: center;
@@ -65,6 +65,7 @@ html, body {
 #csv-table thead tr.header-row-2 th {
   top: 32px; /* height of row 1 */
   z-index: 4;
+  background: #e8ffe8;   /* ⭐ light green for row 2 */
 }
 
 
