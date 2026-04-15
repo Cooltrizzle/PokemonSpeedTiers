@@ -354,7 +354,7 @@ function applySpeedHighlighting(finalSpeed) {
 
       if (isNaN(value)) continue;
 
-      if (value > finalSpeed) {
+      if (value < finalSpeed) {
         row.cells[col].classList.add("speed-higher");
       } else if (value === finalSpeed) {
         row.cells[col].classList.add("speed-equal");
