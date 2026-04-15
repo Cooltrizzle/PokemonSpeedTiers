@@ -385,7 +385,31 @@ Promise.all([
   // Recalculate when EV changes
   document.getElementById("evInput").addEventListener("input", calculateFinalSpeed);
 
+/* ============================================================
+   CONDITIONAL FORMATTING BASED ON SPEED STAT
+============================================================ */
+function applySpeedHighlighting(finalSpeed) {
+  document.querySelectorAll("#csv-table tbody tr").forEach(row => {
+    for (let col = 2; col <= 10; col++) {  // columns 3–11 (0-indexed)
+      const cell = row.cells[col];
+      if (!cell) continue;
 
+      const val = parseInt(cell.textContent.trim(), 10);
+
+      // Clear old formatting
+      cell.classList.remove("speed-higher", "speed-equal");
+
+      if (!isNaN(val)) {
+        if (val > finalSpeed) {
+          cell.classList.add("speed-higher");
+        } else if (val === finalSpeed) {
+          cell.classList.add("speed-equal");
+        }
+      }
+    }
+  });
+}
+  
 /* ============================================================
    DEFAULT SELECTED POKEMON — PIKACHU
 ============================================================ */
