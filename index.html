@@ -7,18 +7,15 @@
 </head>
 <body>
 
-  <!-- ============================================================
-       PAGE CONTAINER — provides outside padding
-  ============================================================ -->
   <div class="page-container">
 
     <!-- ============================================================
-         1. STATIC HEADER (Row 1 + Row 2)
+         STATIC HEADER
     ============================================================ -->
     <div class="static-header">
       <table class="header-table">
 
-        <!-- ⭐ REQUIRED: colgroup ensures header + body widths match -->
+        <!-- Column definitions (must match body table) -->
         <colgroup>
           <col class="col-1">
           <col class="col-2">
@@ -66,12 +63,12 @@
 
 
     <!-- ============================================================
-         2. SCROLL WINDOW — only this scrolls
+         SCROLLABLE TABLE BODY
     ============================================================ -->
     <div class="table-wrapper">
       <table id="csv-table">
 
-        <!-- ⭐ REQUIRED: colgroup ensures header + body widths match -->
+        <!-- Column definitions (must match header table) -->
         <colgroup>
           <col class="col-1">
           <col class="col-2">
@@ -93,7 +90,7 @@
 
 
   <!-- ============================================================
-       3. SCRIPT — LOAD CSV + BUILD HEADER + DATA ROWS
+       SCRIPT — LOAD CSV + BUILD TABLE + FIX HEADER WIDTH
   ============================================================ -->
   <script>
   Promise.all([
@@ -103,7 +100,7 @@
   .then(([regText, speedText]) => {
 
     /* ============================================================
-       3.1 PARSE REGULATION CSV → BUILD LOOKUP TABLE
+       PARSE REGULATION CSV → BUILD LOOKUP TABLE
     ============================================================ */
     const regRows = regText.trim().split(/\r?\n/).map(r => r.split(","));
     const lookup = {};
@@ -120,22 +117,16 @@
 
 
     /* ============================================================
-       3.2 PARSE SPEEDTIERS CSV → BUILD HEADER + DATA ROWS
+       PARSE SPEEDTIERS CSV → BUILD HEADER + DATA ROWS
     ============================================================ */
     const speedRows = speedText.trim().split(/\r?\n/).map(r => r.split(","));
     const table = document.getElementById("csv-table");
 
-
-    /* ============================================================
-       3.2A SET STATIC HEADER TEXT FROM SPEED TIERS CSV
-    ============================================================ */
+    // Set dynamic header text
     const headerText = speedRows[0][0] || "Header";
     document.getElementById("hdr-1-1").textContent = headerText;
 
-
-    /* ============================================================
-       3.2B BUILD DATA ROWS
-    ============================================================ */
+    // Build table body
     const tbody = document.createElement("tbody");
     table.appendChild(tbody);
 
@@ -148,9 +139,7 @@
         const td = document.createElement("td");
         td.classList.add(`col-${colIndex + 1}`);
 
-        /* ---------------------------------------------------------
-           IMAGE COLUMN (COLUMN 2)
-        --------------------------------------------------------- */
+        // IMAGE COLUMN
         if (colIndex === 1) {
           let raw = row[0].trim();
           let baseName = raw;
@@ -202,34 +191,37 @@
       tbody.appendChild(tr);
     });
 
+    /* ============================================================
+       FIX HEADER COL-1 WIDTH TO MATCH BODY + BOTH SCROLLBAR GUTTERS
+    ============================================================ */
+    function adjustHeaderForScrollbar() {
+      const wrapper = document.querySelector('.table-wrapper');
+      const bodyCol1 = document.querySelector('#csv-table td.col-1, #csv-table th.col-1');
+      const headerCol1 = document.querySelector('.header-table col.col-1');
+
+      if (!wrapper || !bodyCol1 || !headerCol1) return;
+
+      // Measure scrollbar width (0 on mobile, ~16px on desktop)
+      const scrollbarWidth = wrapper.offsetWidth - wrapper.clientWidth;
+
+      // Total gutter = left + right
+      const totalGutter = scrollbarWidth * 2;
+
+      // Measure actual rendered width of body col-1
+      const bodyCol1Width = bodyCol1.getBoundingClientRect().width;
+
+      // Apply explicit pixel width to header col-1
+      headerCol1.style.width = `${bodyCol1Width + totalGutter}px`;
+    }
+
+    // Run after table loads
+    setTimeout(adjustHeaderForScrollbar, 50);
+
+    // Re-run on resize
+    window.addEventListener('resize', adjustHeaderForScrollbar);
+
   });
-/* ============================================================
-   FIX HEADER COL-1 WIDTH TO MATCH BODY + BOTH SCROLLBAR GUTTERS
-============================================================ */
-function adjustHeaderForScrollbar() {
-  const wrapper = document.querySelector('.table-wrapper');
-  const headerCol1 = document.querySelector('.header-table col.col-1');
-
-  if (!wrapper || !headerCol1) return;
-
-  // Measure scrollbar width (0 on mobile, ~16px on desktop)
-  const scrollbarWidth = wrapper.offsetWidth - wrapper.clientWidth;
-
-  // Total gutter = left + right
-  const totalGutter = scrollbarWidth * 2;
-
-  // Apply compensation to header col-1 only
-  headerCol1.style.width = `calc(auto + ${totalGutter}px)`;
-}
-
-// Run after table loads
-setTimeout(adjustHeaderForScrollbar, 50);
-
-// Re-run on resize (desktop scrollbars can change)
-window.addEventListener('resize', adjustHeaderForScrollbar);
-
   </script>
 
 </body>
 </html>
-
