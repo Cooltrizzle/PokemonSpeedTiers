@@ -319,3 +319,20 @@ body, input, select, button, .calc-box, .dropdown-item {
   gap: 4px;
 }
 
+/* HEADER ROWS — 10% smaller */
+#csv-table thead th {
+  height: 29px;        /* was 32px */
+  padding: 4px;        /* was 6px */
+}
+
+/* BODY ROWS — 10% smaller */
+#csv-table td {
+  padding: 3px 5px;    /* was 4px 6px */
+}
+
+/* IMAGES — 10% smaller */
+#csv-table td img {
+  width: 36px;         /* was 40px */
+  height: 36px;        /* was 40px */
+  object-fit: contain;
+}
